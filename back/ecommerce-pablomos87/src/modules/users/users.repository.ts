@@ -55,7 +55,18 @@ export class UsersRepository {
             city: 'Mendoza'
           }
     ]
+    
     async getUsers() {
         return this.users
+    }
+    
+    async getById (id: number) {
+      return this.users.find(user => user.id === id)
+    }
+
+    async createUser (user) {
+      const id = this.users.length + 1;
+      this.users = [... this.users, {id, ...user }];
+      return user;
     }
 };

@@ -7,4 +7,7 @@ export class UsersService {
     getUsers () {
         return this.UsersRepository.getUsers()
     }
+    getUsersById(id: number) {
+        return this.UsersRepository.getById(id)
+    }
 };
