@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     HttpStatus,
     Param,
     Post,
@@ -12,9 +13,10 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Response } from 'express';
-import { User } from './users.interface';
-import { AuthGuard } from '../auth/auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserResponseDto } from './dto/response-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -22,46 +24,42 @@ export class UsersController {
 
     @Get()
     @UseGuards(AuthGuard)
-
+    @HttpCode(HttpStatus.OK) 
     async getAllUsers(
         @Query('page') page: number = 1, 
         @Query('limit') limit: number = 5, 
-        @Res() res: Response
     ) {
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
-        const users = await this.UsersService.getUsers(pageNumber, limitNumber);
-        return res.status(HttpStatus.OK).json(users);
+        return await this.UsersService.getUsers(pageNumber, limitNumber);
     };
 
-    @Get(':id')
+
+@Post('register')
+   @HttpCode(HttpStatus.CREATED) 
+   createUser(@Body() createUserDto: CreateUserDto) {
+    return this.UsersService.createUser(createUserDto);
+}
+   
+   @Get(':id')
     @UseGuards(AuthGuard)
-    async getUsersById(@Param('id') id: number, @Res() res: Response) {
+    @HttpCode(HttpStatus.OK) 
+    async getUsersById(@Param('id') id: number) {
         const user = await this.UsersService.getUsersById(Number(id));
-        return user 
-        ? res.status(HttpStatus.OK).json(user) 
-        : res.status(400).json({ message: 'User not found' });
-    };
-
-    @Post('register')
-    async createUser(@Body() userData: Omit<User, 'id'>, @Res() res: Response) {
-        const newUser = await this.UsersService.createUser(userData);
-        return res.status(HttpStatus.CREATED).json(`user_id: ${newUser.id}`);
+        return new UserResponseDto(user)
     };
 
     @Put(':id')
     @UseGuards(AuthGuard)
-    async updateUser(@Param('id') id: number,@Body() userData: Omit <User, 'id'>, @Res() res: Response) {
-        const updatedUser = await this.UsersService.updateUser(id, userData)
-        return res.status(HttpStatus.OK).json(/* `id: ${id}` */updatedUser);
+    @HttpCode(HttpStatus.OK) 
+    async updateUser(@Param('id') id: number,@Body() updateUserDto: UpdateUserDto) {
+        const updatedUser = await this.UsersService.updateUser(Number(id), updateUserDto)
+        return updatedUser.id;
     };
 
     @Delete(':id')
     @UseGuards(AuthGuard)
-    async deleteUser(@Param('id') id: number, @Res() res: Response) {
-        const deletedUser = await this.UsersService.deleteUser(Number(id));
-        return deletedUser
-        ? res.status(HttpStatus.OK).json(`id: ${id}`)
-        : res.status(400).json({ message: 'User not found' });
+    async deleteUser(@Param('id') id: number) {
+        return await this.UsersService.deleteUser(Number(id));
     }
 };

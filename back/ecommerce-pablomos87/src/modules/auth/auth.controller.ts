@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { Response } from "express";
+import { SignInAuthDto } from "./dto/signin-auth.dto";
 
 
 @Controller('auth')
@@ -12,12 +12,9 @@ export class AuthController {
     return this.AuthService.getAuth();
     }
 
-    @Post('signin') 
-        async authLogin (@Body() body: { email: string; password: string }, @Res() res: Response) {
-            const { email, password } = body;
-            const user = await this.AuthService.authLogin(email, password);
-            return user 
-            ? res.status(200).json(user) 
-            : res.status(401).json({ message: 'Invalid credentials' });
+    @Post('signin')
+    @HttpCode(HttpStatus.OK)  
+        async authLogin (@Body() credentials: SignInAuthDto) {
+            return this.AuthService.signIn(credentials)
         }
 }

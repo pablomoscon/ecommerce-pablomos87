@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "./users.interface";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 @Injectable()
 export class UsersRepository {
     private users: User[] = [
@@ -64,31 +66,33 @@ export class UsersRepository {
         return this.users.slice(startIndex, endIndex);
     }
 
-    async getById(id: number): Promise<User | undefined> {
+    async getById(id: number): Promise<User> {
         return this.users.find(user => user.id === id);
     }
 
-    async createUser(userData: Omit<User, 'id'>): Promise<User> {
-        const id = this.users.length + 1;
-        const newUser = { id, ...userData };
-        this.users.push(newUser);
+    async createUser(createUserDto: CreateUserDto):Promise<User> {
+        const newUser = { 
+            id: this.users.length + 1,
+            ...createUserDto, 
+        };
+        await this.users.push(newUser);
         return newUser;
     }
 
-    async authLogin(email: String, password: String): Promise<User | null> {
-        const user = this.users.find(user => user.email === email && user.password === password);
-         console.log('User found:', user)
-        return user || null;
-    }
-
-    async updateUser(id: number, userData: Omit<User, "id">): Promise<User | null> {
-        const userId = Number(id);
-        const user = await this.getById(userId);
-        return user
-        ? (this.users[this.users.indexOf(user)] = { ...user, ...userData }, 
-           console.log('Updated user:', this.users[this.users.indexOf(user)]), 
-           this.users[this.users.indexOf(user)])
-        : (console.log(`User with id ${userId} not found`), null)
+    async updateUser(id: number, updateUserDto: UpdateUserDto) {
+        const user =  await this.getById(id);
+        console.log(user);
+        
+        const updatedUser = {
+            ...user,
+            ...updateUserDto,
+        };
+        console.log(updatedUser);
+        
+        this.users =  this.users.map((user) =>
+            user.id === id ? updatedUser : user,
+        );
+        return updatedUser;
     }
 
     async deleteUser(id: number): Promise<User | null> {
@@ -99,4 +103,8 @@ export class UsersRepository {
         console.log('User deleted:', user), user)
         : (console.log(`User with id ${id} not found`), null);
       }
+    
+    async getOneByEmail(email: string) {
+        return this.users.find(user => user.email === email);
+    }
 }

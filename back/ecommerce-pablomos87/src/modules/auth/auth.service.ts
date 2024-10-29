@@ -1,14 +1,21 @@
 import { Injectable } from "@nestjs/common";
-import { UsersRepository } from '../users/users.repository';
+import { SignInAuthDto } from "./dto/signin-auth.dto";
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-    constructor (private UsersRepository: UsersRepository) {}
+    constructor (private readonly UsersService: UsersService) {}
 
     getAuth () {
         return 'Get all auths'
     }
-    authLogin (email: String, password: String) {
-        return this.UsersRepository.authLogin(email, password)
-    }
+
+    async signIn(credentials: SignInAuthDto) {
+        const user = await this.UsersService.getByEmail(credentials.email);
+      
+        if (user && user.password === credentials.password) {
+          return 'You are logged in!';
+        }
+        return 'Invalid credentials';
+      }
 };
