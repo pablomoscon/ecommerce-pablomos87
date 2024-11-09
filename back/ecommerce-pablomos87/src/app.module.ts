@@ -6,7 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { OrderDetailsModule } from './modules/order-details/order-details.module';
 import databaseConfig from './config/database.config';
+import { SeedsModule } from './seeds/seeds.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -22,7 +25,7 @@ import databaseConfig from './config/database.config';
     }),
     UsersModule, 
     ProductsModule, 
-    AuthModule, OrdersModule, CategoriesModule],
+    AuthModule, OrdersModule, CategoriesModule, OrderDetailsModule, SeedsModule, FilesModule],
   
   controllers: [],
   providers: [],

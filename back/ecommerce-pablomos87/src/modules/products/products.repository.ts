@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+/* import { Injectable } from "@nestjs/common";
 import { Product } from "./products.interface";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from "./dto/update-product.dto";
@@ -88,4 +88,4 @@ export class ProductsRepository {
       : (console.log(`Product with id ${id} not found`), null);
   }
 
-};
+}; */

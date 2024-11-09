@@ -1,27 +1,51 @@
 import { Injectable } from "@nestjs/common";
-import { ProductsRepository } from './products.repository';
-import { Product } from "./products.interface";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { Product } from "./entities/product.entity";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 @Injectable()
 export class ProductsService {
-   
-    constructor (private ProductsRepository: ProductsRepository) {}
-    async getProducts (pageNumber: number, limitNumber: number) {
-        return await this.ProductsRepository.getProducts(pageNumber, limitNumber)
-    }
+    constructor(
+        @InjectRepository(Product) private productsRepository: Repository <Product>) {}
+    
+        async getProducts (pageNumber: number, limitNumber: number) {
+        return await this.productsRepository.find({
+            skip: (pageNumber - 1) * limitNumber,
+            take: limitNumber,
+        });
+    };
 
-    async getById (id: number) {
-        return await this.ProductsRepository.getById(id)
-     }
+    async getProductsById (id: string) {
+        return await this.productsRepository.findOneBy({ id });
+     };
+     async getProductsByIds(productIds: string[]): Promise<Product[]> {
+        return this.productsRepository.findByIds(productIds);
+      };
      async addProduct(createProductDto: CreateProductDto):Promise <Product> {
-            return await this.ProductsRepository.addProduct(createProductDto);
-          }
-     async updateProduct(id: number, updateProductDto: UpdateProductDto) {
-        return await this.ProductsRepository.updateProduct(id, updateProductDto);
-    }
-    async deleteProduct (id:number){
-        return await this.ProductsRepository.deleteProduct(id)
-    }
+        const newProduct =  await this.productsRepository.create(createProductDto);
+        return this.productsRepository.save(newProduct);
+          };
+     async updateProduct(id: string, updateProductDto: UpdateProductDto) {
+            await this.productsRepository.update(id, updateProductDto);
+            return await this.getProductsById(id);
+    };
+    async deleteProduct (id:string){
+        return await this.productsRepository.delete(id)
+    };
 
+    async buyProduct(id: string) {
+        const product = await this.productsRepository.findOneBy({ id });
+    
+        if (product.stock === 0) {
+            throw new Error('Out of stock');
+        }
+    
+        await this.productsRepository.update(id, {
+            stock: product.stock - 1,
+        });
+    
+        console.log('Product bought successfully');
+        return product.price;
+    }
 };

@@ -1,12 +1,11 @@
 import { Order } from "src/modules/orders/entities/order.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import {v4 as uuid } from 'uuid';
 
 @Entity()
 export class User {
 
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: string;
 
   @Column({ length: 50 })
   name: string;
@@ -14,11 +13,11 @@ export class User {
   @Column({ length: 50, unique: true })
   email: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 50 })
   password: string;
 
-  @Column({ type: 'int', nullable: true })
-  phone: number;
+  @Column({ length: 50 })
+  phone: string;
 
   @Column({ length: 50, nullable: true })
   country: string;

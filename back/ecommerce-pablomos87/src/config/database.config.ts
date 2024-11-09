@@ -1,4 +1,4 @@
-import { config as dotenvConfig} from 'dotenv'
+import { config as dotenvConfig} from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { registerAs } from '@nestjs/config';
 

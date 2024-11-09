@@ -1,19 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Category } from './entities/category.entity';
+
 
 @Injectable()
 export class CategoriesService {
-  addCategories(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
-  }
 
-  getAllCategories() {
-    return `This action returns all categories`;
-  }
+    constructor(
+        @InjectRepository(Category) private categoriesRepository: Repository<Category>,
+    ) { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
+    async getAllCategories() {
+        return this.categoriesRepository.find();
+    }
 
+    async addCategories(createCategoryDtos: CreateCategoryDto[]) {
+        for (const categoryDto of createCategoryDtos) {
+            const existingCategory = await this.categoriesRepository.findOneBy({ name: categoryDto.name });
+
+            if (!existingCategory) {
+                const newCategory = this.categoriesRepository.create(categoryDto);
+                await this.categoriesRepository.save(newCategory);
+            }
+        }
+    }
 }

@@ -1,24 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './entities/category.entity';
+
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(private readonly categoriesService: CategoriesService) { }
 
-  @Post()
- addCategories(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoriesService.addCategories(createCategoryDto);
-  }
 
   @Get()
-  getAllCategories() {
-    return this.categoriesService.getAllCategories();
+  async getAlCategories() {
+    return await this.categoriesService.getAllCategories()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoriesService.findOne(+id);
+  @Post('add-categories')
+  async addCategories(@Body() createCategoryDto: CreateCategoryDto[]) {
+    await this.categoriesService.addCategories(createCategoryDto);
+    return { message: 'Categories added successfully' };
   }
 }
+

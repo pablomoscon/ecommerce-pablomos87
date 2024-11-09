@@ -1,12 +1,11 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import {v4 as uuid } from 'uuid';
-import { Order } from './order.entity';
 import { Product } from 'src/modules/products/entities/product.entity';
+import { Order } from 'src/modules/orders/entities/order.entity';
 
 @Entity()
-export class OrderDetails {
+export class OrderDetail {
     @PrimaryGeneratedColumn('uuid')
-    id: string = uuid();
+    id: string ;
 
     @Column({type: 'decimal', precision: 10, scale: 2})
     price: number;
@@ -15,6 +14,5 @@ export class OrderDetails {
     order: Order;
     
     @ManyToMany(() => Product, (product) => product.orderDetails)
-    @JoinTable()
-    product: Product[]
+    products: Product[]
 };

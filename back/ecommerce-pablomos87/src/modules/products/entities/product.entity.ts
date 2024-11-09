@@ -1,18 +1,18 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import {v4 as uuid } from 'uuid';
-import { OrderDetails } from "src/modules/orders/entities/orderDetails.entity";
-import { Categories } from "src/modules/categories/entities/categories.entity";
+import { Category } from './../../categories/entities/category.entity';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, JoinTable } from 'typeorm';
+import { OrderDetail } from "src/modules/order-details/entities/order-detail.entity";
+
 
 @Entity()
 export class Product {
 
     @PrimaryGeneratedColumn('uuid')
-    id: string = uuid();
+    id: string;
   
-    @Column({ length: 50 })
+    @Column({ length: 150 })
     name: string;
   
-    @Column({ length: 50, unique: true })
+    @Column({ length: 255 })
     description: string;
   
     @Column({ type: 'decimal', precision: 10, scale: 2 }) 
@@ -24,9 +24,10 @@ export class Product {
     @Column({ default:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWz9tftw9qculFH1gxieWkxL6rbRk_hrXTSg&s' })
     imgUrl: string;
 
-    @OneToMany(() => Categories, (categories) => categories.product)
-    categories: Categories[];
+    @OneToMany(() => Category, (category) => category.product)
+    category: Category[];
 
-    @ManyToMany(() => OrderDetails, (orderDetails) => orderDetails.product)
-    orderDetails: OrderDetails[];
+    @ManyToMany(() => OrderDetail, (orderDetail) => orderDetail.products)
+    @JoinTable()
+    orderDetails: OrderDetail[];
 }

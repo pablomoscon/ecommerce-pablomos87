@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsUrl, IsOptional, Min, IsPositive, Length } from '
 
 export class CreateProductDto {
     @IsString()
-    @Length(2, 50)
+    @Length(2, 150)
     name: string;
 
     @IsString()

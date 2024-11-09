@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+/* import { Injectable } from "@nestjs/common";
 import { User } from "./users.interface";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -102,9 +102,9 @@ export class UsersRepository {
         ? (this.users.splice(this.users.indexOf(user), 1), 
         console.log('User deleted:', user), user)
         : (console.log(`User with id ${id} not found`), null);
-      }
+    }
     
     async getOneByEmail(email: string) {
         return this.users.find(user => user.email === email);
     }
-}
+} */
