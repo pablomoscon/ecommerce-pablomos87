@@ -8,72 +8,91 @@ import {
     HttpStatus,
     Param,
     ParseUUIDPipe,
-    Post,
     Put,
     Query,
-    Res,
     UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserResponseDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
-import { isUUID } from 'class-validator';
-import { User } from './entities/user.entity';
+import { Roles } from 'src/decorators/roles.decorators';
+import { Role } from 'src/modules/users/enum/roles.enum';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly UsersService: UsersService) { }
+    constructor(private readonly usersService: UsersService) { }
 
     @Get()
-    @UseGuards(AuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
     @HttpCode(HttpStatus.OK)
     async getAllUsers(
-        @Query('page') page: number = 1,
-        @Query('limit') limit: number = 5,
+        @Query('page') page: string = '1',
+        @Query('limit') limit: string = '5',
     ) {
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
-        const users = await this.UsersService.getUsers(pageNumber, limitNumber);
-        return users.map(user => new UserResponseDto(user));
-    };
-
-
-    @Post('register')
-    @HttpCode(HttpStatus.CREATED)
-    createUser(@Body() createUserDto: CreateUserDto) {
-        return this.UsersService.createUser(createUserDto);
+        const users = await this.usersService.getUsers(pageNumber, limitNumber);
+        return users.map((user) => new UserResponseDto(user, true));
     };
 
     @Get(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     async getUsersById(@Param('id', new ParseUUIDPipe()) id: string) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        const user = await this.UsersService.getUsersById(id);
-        return new UserResponseDto(user)
+        {
+            try {
+                const user = await this.usersService.getUsersById(id);
+                if (!user) {
+                    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+                }
+                return new UserResponseDto(user);
+            } catch (error) {
+                throw new HttpException(
+                    'Error fetching user',
+                    error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                );
+            }
+        }
     };
 
     @Put(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    async updateUser(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateUserDto: UpdateUserDto) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        const updatedUser = await this.UsersService.updateUser(id, updateUserDto);
-        return updatedUser.id;
+    async updateUser(
+        @Param('id', new ParseUUIDPipe()) id: string,
+        @Body() updateUserDto: UpdateUserDto,
+    ) {
+        try {
+            const updatedUser = await this.usersService.updateUser(id, updateUserDto);
+            return updatedUser.id;
+        } catch (error) {
+            throw new HttpException(
+                'Error updating user',
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
     };
 
     @Delete(':id')
     @UseGuards(AuthGuard)
-    async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        return await this.UsersService.deleteUser(id);
+    async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
+        try {
+            await this.usersService.deleteUser(id);
+            return { success: 'User deleted successfully' };
+        } catch (error) {
+            throw new HttpException(
+                'Error deleting user',
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
     }
 };
+
+/*   @Post('register')
+    @HttpCode(HttpStatus.CREATED)
+    createUser(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createUser(createUserDto);
+  }; */

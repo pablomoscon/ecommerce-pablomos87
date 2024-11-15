@@ -10,6 +10,10 @@ import { OrderDetailsModule } from './modules/order-details/order-details.module
 import databaseConfig from './config/database.config';
 import { SeedsModule } from './seeds/seeds.module';
 import { FilesModule } from './modules/files/files.module';
+import { CloudinaryService } from './service/cloudinary/cloudinary.service';
+import { CloudinaryConfig } from './config/cloudinary.config';
+import { JwtModule } from '@nestjs/jwt';
+
 
 @Module({
   imports: [
@@ -23,11 +27,21 @@ import { FilesModule } from './modules/files/files.module';
       useFactory: (configService: ConfigService) => 
         configService.get('databaseConfig'),
     }),
+      JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: '1h'},
+      secret: process.env.JWT_SECRET,
+    }),
     UsersModule, 
     ProductsModule, 
-    AuthModule, OrdersModule, CategoriesModule, OrderDetailsModule, SeedsModule, FilesModule],
-  
+    AuthModule, 
+    OrdersModule, 
+    CategoriesModule, 
+    OrderDetailsModule, 
+    SeedsModule, 
+    FilesModule,
+  ],
   controllers: [],
-  providers: [],
+  providers: [CloudinaryService, CloudinaryConfig],
 })
 export class AppModule {}

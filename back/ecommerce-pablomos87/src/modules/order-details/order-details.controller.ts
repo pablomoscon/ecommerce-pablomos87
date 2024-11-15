@@ -10,32 +10,11 @@ export class OrderDetailsController {
 
   @Post()
  async create(@Body() createOrderDetailDto: CreateOrderDetailDto) {
+  try {
     return await this.orderDetailsService.create(createOrderDetailDto);
-  }
-
-  @Get()
-  async findAll() {
-    return await this.orderDetailsService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!isUUID(id, 4)) {
-      throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
+  } catch (error) {
+    throw error;
     }
-    return await this.orderDetailsService.findOne(+id);
-  }
+};
 
-  @Patch(':id')
-  async update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateOrderDetailDto: UpdateOrderDetailDto) {
-    if (!isUUID(id, 4)) {
-      throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-    }
-    return await this.orderDetailsService.update(+id, updateOrderDetailDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.orderDetailsService.remove(+id);
-  }
-}
+};

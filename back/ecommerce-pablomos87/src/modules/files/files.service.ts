@@ -1,35 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { UploadApiResponse, v2 } from 'cloudinary';
-import * as toStream from 'buffer-to-stream';
+import { Injectable } from "@nestjs/common";
 import { ProductsService } from '../products/products.service';
+import { CloudinaryService } from "src/service/cloudinary/cloudinary.service";
 
 @Injectable()
 export class FilesService {
-  constructor (
+  constructor(
+    private readonly cloudinaryService: CloudinaryService,
+    private readonly productsService: ProductsService, 
+  ) {}
 
-    private readonly productsService: ProductsService,
-  ){ }
-  
-  async uploadImage(file: Express.Multer.File): Promise<UploadApiResponse> {
-    console.log(file); 
-    return new Promise((resolve, reject) => {
-      const upload = v2.uploader.upload_stream(
-        { resource_type: 'auto' },
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        }
-      );
+  async uploadImage(id: string, file: Express.Multer.File) {
 
-      toStream(file.buffer).pipe(upload);
-    });
-  }
+ const uploadedImageUrl = await this.cloudinaryService.uploadFile(file.buffer, file.originalname);
+ await this.updateProductWithImageUrl(id, uploadedImageUrl); 
+ return uploadedImageUrl;
+  };
 
-  async updateProductWithImageUrl(id: string, uploadResult: string): Promise<void> {
-    const imgUrl = uploadResult;
+  async getUrl(publicId: string) {
+    return await this.cloudinaryService.getUrl(publicId);
+  };
+
+  async updateProductWithImageUrl(id: string, uploadedImageUrl: string): Promise<void> {
+    const imgUrl = uploadedImageUrl;
     await this.productsService.updateProduct(id, {imgUrl} ); 
   }
-}
+};

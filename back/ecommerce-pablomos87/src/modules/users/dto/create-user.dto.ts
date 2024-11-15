@@ -1,33 +1,34 @@
-import { IsString, IsEmail, Length, Matches, IsNotEmpty, IsNumberString } from 'class-validator';
+import { IsString, IsEmail, Length, Matches, IsNotEmpty, IsEmpty } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  @IsNotEmpty({ message: 'El nombre no puede estar vacío' })
-  @Length(3, 80, { message: 'El nombre debe tener entre 3 y 80 caracteres' })
+  @IsNotEmpty()
+  @Length(3, 80)
   name: string;
 
-  @IsEmail({}, { message: 'El correo electrónico debe tener una estructura válida' })
+  @IsEmail()
   email: string;
 
   @IsString()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/, {
-    message: 'La contraseña debe tener entre 8 y 15 caracteres, incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial (!@#$%^&*)'
-  })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,15}$/)
   password: string;
 
   @IsString()
-  @Length(3, 80, { message: 'La dirección debe tener entre 3 y 80 caracteres' })
+  @Length(3, 80)
   address: string;
 
-  @IsNotEmpty({ message: 'El número de teléfono es obligatorio' })
+  @IsNotEmpty()
   @IsString()
   phone: string;
 
   @IsString()
-  @Length(5, 20, { message: 'El país debe tener entre 5 y 20 caracteres' })
+  @Length(5, 20)
   country: string;
 
   @IsString()
-  @Length(5, 20, { message: 'La ciudad debe tener entre 5 y 20 caracteres' })
+  @Length(5, 20)
   city: string;
+
+  @IsEmpty ()
+  isAdmin: boolean;
 }

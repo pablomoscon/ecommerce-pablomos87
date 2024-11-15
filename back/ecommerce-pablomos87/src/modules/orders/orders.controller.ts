@@ -1,25 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { isUUID } from 'class-validator';
 import { OrderResponseDto } from './dto/response-order-dto';
+import { AuthGuard } from 'src/guards/auth/auth.guard';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   async addOrder(@Body() createOrderDto: CreateOrderDto) {
-    const newOrder = await this.ordersService.addOrder(createOrderDto);
-    return new OrderResponseDto(newOrder);
-  };
+    try {
+      const newOrder = await this.ordersService.addOrder(createOrderDto);
+      return new OrderResponseDto(newOrder);
+    } catch (error) {
+      throw new HttpException(
+        'Error adding order',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async getOrderById(@Param('id', new ParseUUIDPipe()) id: string) {
-  
-    if (!isUUID(id, 4)) {
-      throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
+    try {
+      const order = await this.ordersService.getById(id);
+      if (!order) {
+        throw new HttpException('Order not found', HttpStatus.NOT_FOUND);
+      }
+      return order;
+    } catch (error) {
+      throw new HttpException(
+        'Error fetching order',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-    return await this.ordersService.getById(id);
-  };
+  }
 };

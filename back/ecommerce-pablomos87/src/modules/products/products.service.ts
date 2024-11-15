@@ -7,8 +7,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 @Injectable()
 export class ProductsService {
     constructor(
-        @InjectRepository(Product) private productsRepository: Repository <Product>) {}
-    
+        @InjectRepository(Product) 
+        private readonly productsRepository: Repository <Product>,
+    ){}
+
         async getProducts (pageNumber: number, limitNumber: number) {
         return await this.productsRepository.find({
             skip: (pageNumber - 1) * limitNumber,

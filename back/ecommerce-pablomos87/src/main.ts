@@ -8,7 +8,11 @@ import { ProductsSeed } from './seeds/products/products.seed';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist:true,
+    forbidNonWhitelisted: true,
+    transform: true
+  }));
   app.use(loggerGloblal);
   const categoriesSeed = app.get(CategoriesSeed);
   await categoriesSeed.seed();

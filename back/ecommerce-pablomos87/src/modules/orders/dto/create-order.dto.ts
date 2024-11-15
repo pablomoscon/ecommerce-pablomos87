@@ -12,6 +12,10 @@ export class CreateOrderDto {
     @ValidateNested({ each: true }) 
     @Type(() => PartialProducts) 
     products: PartialProducts[];
-}
+};
 
-export class PartialProducts extends PartialType(Product) {}
+export class PartialProducts {
+    @IsUUID('4', { message: 'El id del producto debe tener un formato UUID válido' })
+    @IsNotEmpty({ message: 'El id del producto no puede estar vacío' })
+    id: string;
+};

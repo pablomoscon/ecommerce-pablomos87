@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Put, Delete, UseGuards, HttpStatus, Query, Res, Param, Body, HttpCode, ParseUUIDPipe, HttpException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  UseGuards,
+  HttpStatus,
+  Query,
+  Res,
+  Param,
+  Body,
+  HttpCode,
+  ParseUUIDPipe,
+  HttpException,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -7,58 +22,74 @@ import { isUUID } from 'class-validator';
 
 @Controller('products')
 export class ProductsController {
-    constructor(private readonly ProductsService: ProductsService) { }
+  constructor(private readonly productsService: ProductsService) {}
 
-    @Get()
-    @HttpCode(HttpStatus.OK)
-    async getAllProducts(
-        @Query('page') page: number = 1,
-        @Query('limit') limit: number = 5,
-    ) {
-        const pageNumber = Number(page);
-        const limitNumber = Number(limit);
-        return await this.ProductsService.getProducts(pageNumber, limitNumber);
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getAllProducts(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '5',
+  ) {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    return await this.productsService.getProducts(pageNumber, limitNumber);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const product = await this.productsService.getProductsById(id);
+    if (!product) {
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
+    return product;
+  };
+
+  @Post('addProduct')
+  @HttpCode(HttpStatus.CREATED)
+  async addProduct(@Body() createProductDto: CreateProductDto) {
+    try {
+      return await this.productsService.addProduct(createProductDto);
+    } catch (error) {
+      throw new HttpException(
+        'Error adding product',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  };
+
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async updateProduct(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+      try {
+        const updatedProduct = await this.productsService.updateProduct(
+          id,
+          updateProductDto,
+        );
+        return updatedProduct.id;
+      } catch (error) {
+        throw new HttpException(
+          'Error updating product',
+          error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     };
 
-    @Get(':id')
-    @HttpCode(HttpStatus.OK)
-    async getProductsById(
-        @Param('id', new ParseUUIDPipe()) id: string) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        
-        const product = await this.ProductsService.getProductsById(id);
-        if (!product) {
-            throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
-          };
-          return product;
-    };
-
-    @Post('addProduct')
-    @HttpCode(HttpStatus.CREATED)
-    async addProduct(@Body() createProductDto: CreateProductDto) {
-        return await this.ProductsService.addProduct(createProductDto)
-    };
-
-    @Put(':id')
-    @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.OK)
-    async updateProduct(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateProductDto: UpdateProductDto) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        const updatedUser = await this.ProductsService.updateProduct(id, updateProductDto)
-        return updatedUser.id;
-    };
-
-    @Delete(':id')
-    @UseGuards(AuthGuard)
-    @HttpCode(HttpStatus.OK)
-    async deleteProduct(@Param('id', new ParseUUIDPipe()) id: string) {
-        if (!isUUID(id, 4)) {
-            throw new HttpException('Invalid UUID', HttpStatus.BAD_REQUEST);
-        };
-        return await this.ProductsService.deleteProduct(id);
-    };
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      return await this.productsService.deleteProduct(id);
+    } catch (error) {
+      throw new HttpException(
+        'Error deleting product',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 };
