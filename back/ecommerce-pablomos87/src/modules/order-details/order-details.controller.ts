@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, HttpStatus, HttpException } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
-import { UpdateOrderDetailDto } from './dto/update-order-detail.dto';
-import { isUUID } from 'class-validator';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('order-details')
+@ApiTags('order-details')
 export class OrderDetailsController {
   constructor(private readonly orderDetailsService: OrderDetailsService) {}
 
@@ -15,6 +15,4 @@ export class OrderDetailsController {
   } catch (error) {
     throw error;
     }
-};
-
-};
+}};

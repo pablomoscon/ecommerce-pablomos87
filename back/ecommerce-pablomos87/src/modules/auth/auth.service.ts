@@ -5,7 +5,7 @@ import { SignupAuthDto } from "./dto/signup-auth.dto";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from "@nestjs/jwt";
 import { User } from "../users/entities/user.entity";
-import { Role } from "src/modules/users/enum/roles.enum";
+
 
 @Injectable()
 export class AuthService {
@@ -18,22 +18,26 @@ export class AuthService {
     if (signUpUser.password !== signUpUser.confirmPassword) {
       throw new HttpException ('Password do not match', 400)
     }
-    const user = await this.usersService.getByEmail(signUpUser.email)
+    const user = await this.usersService.findByEmail(signUpUser.email)
     if (user) {
       throw new BadRequestException('User already exists')
     }
     signUpUser.password = await bcrypt.hash(signUpUser.password, 10)
-    return await this.usersService.createUser(signUpUser);
+    return this.usersService.createUser(signUpUser);
   };
 
   async signin(credentials: SignInAuthDto) {
-    const user = await this.usersService.getByEmail(credentials.email);
+    const user = await this.usersService.findByEmail(credentials.email);
+    console.log('User found:', user);
 
     if (!user) {
       throw new BadRequestException('Invalid credentials')
     };
-    const istPasswordValid = await bcrypt.compare(credentials.password, user.password);
-    if (!istPasswordValid) {
+    const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+    console.log('Password comparison result:', isPasswordValid);
+    if (!isPasswordValid) {
+      console.log('Password mismatch'); 
       throw new BadRequestException('Invalid credentials')
     };
     return await this.createToken(user)
@@ -44,7 +48,7 @@ export class AuthService {
       sub: user.id,
       id: user.id,
       email: user.email,
-      administrator: user.administrator,
+      role: user.role,
     };
     return this.jwtService.signAsync(payload)
   };

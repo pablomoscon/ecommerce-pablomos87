@@ -12,14 +12,15 @@ export class UsersService {
         @InjectRepository(User) private usersRepository: Repository<User>,
     ) { }
 
-    async getUsers(pageNumber: number, limitNumber: number) {
+    async findUsers(pageNumber: number, limitNumber: number) {
         return await this.usersRepository.find({
             skip: (pageNumber - 1) * limitNumber,
             take: limitNumber,
             relations: ['orders'],
         });
     };
-    async getUsersById(id: string) {
+    
+    async findUsersById(id: string) {
         return await this.usersRepository.findOne({ 
             where: { id },
             relations: ['orders'],
@@ -33,14 +34,18 @@ export class UsersService {
 
     async updateUser(id: string, updateUserDto: UpdateUserDto) {
         await this.usersRepository.update(id, updateUserDto);
-        return await this.getUsersById(id);
+        return await this.findUsersById(id);
     }
 
     async deleteUser(id: string) {
         return await this.usersRepository.delete(id);
     }
     
-    async getByEmail(email: string) {
-        return await this.usersRepository.findOne({ where: { email } });
+    async findByEmail(email: string) {
+        console.log('findByEmail llamado con:', email);
+  const user = await this.usersRepository.findOne({ where: { email } });
+  console.log('Usuario encontrado en findByEmail:', user);
+  return user;
+        
     }
-}
+};

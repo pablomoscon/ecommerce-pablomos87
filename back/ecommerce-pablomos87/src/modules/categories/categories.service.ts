@@ -12,7 +12,7 @@ export class CategoriesService {
         @InjectRepository(Category) private categoriesRepository: Repository<Category>,
     ) { }
 
-    async getAllCategories() {
+    async findAllCategories() {
         return this.categoriesRepository.find();
     }
 

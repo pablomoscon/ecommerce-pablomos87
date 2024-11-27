@@ -57,7 +57,7 @@ export class UsersRepository {
         }
     ];
 
-    async getUsers(pageNumber: number = 1, limitNumber: number = 5): Promise<User[]> {
+    async findUsers(pageNumber: number = 1, limitNumber: number = 5): Promise<User[]> {
         const startIndex = (pageNumber - 1) * limitNumber;
         const endIndex = startIndex + limitNumber;
 

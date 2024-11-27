@@ -1,4 +1,5 @@
 import { Order } from 'src/modules/orders/entities/order.entity';
+import { Role } from '../enum/roles.enum';
 
 export class UserResponseDto {
     id: string;
@@ -9,7 +10,7 @@ export class UserResponseDto {
     country: string;
     city: string;
     orders: Order[];
-    administrator: string;
+    role: Role;
 
     constructor(
         partial: Partial<UserResponseDto>,
@@ -24,7 +25,7 @@ export class UserResponseDto {
             country,
             city,
             orders,
-            administrator,
+            role,
         } = partial;
         this.id = id;
         this.name = name;
@@ -36,7 +37,7 @@ export class UserResponseDto {
         this.orders = orders;
 
         if (includeAdmin) {
-            this.administrator = administrator;
+            this.role = role;
         }
     }
 }

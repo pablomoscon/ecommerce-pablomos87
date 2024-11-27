@@ -3,8 +3,10 @@ import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { isUUID } from 'class-validator';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('files')
+@ApiTags('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
@@ -21,4 +23,4 @@ export class FilesController {
     }
   return await this.filesService.uploadImage(id, file);
 }
-}
+};

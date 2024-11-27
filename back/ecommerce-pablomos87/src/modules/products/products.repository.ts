@@ -48,7 +48,7 @@ export class ProductsRepository {
       imgUrl: 'https://example.com/images/altavoz-bluetooth.jpg'
     }
   ];
-  async getProducts(pageNumber: number, limitNumber: number) {
+  async findProducts(pageNumber: number, limitNumber: number) {
     return await this.products
   };
 

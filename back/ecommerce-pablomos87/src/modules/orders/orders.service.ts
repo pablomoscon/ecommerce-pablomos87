@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from '../users/users.service';
 import { CreateOrderDetailDto } from '../order-details/dto/create-order-detail.dto';
 import { OrderDetailsService } from '../order-details/order-details.service';
-import { OrderDetail } from '../order-details/entities/order-detail.entity';
 
 @Injectable()
 export class OrdersService {
@@ -21,7 +20,15 @@ export class OrdersService {
   async addOrder(createOrderDto: CreateOrderDto) {
     const { userId, products } = createOrderDto;
 
-    const user = await this.usersService.getUsersById(userId);
+    if (!products || products.length === 0) {
+      throw new Error('Order must contain at least one product');
+    };
+
+    const user = await this.usersService.findUsersById(userId);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`);
+    }
 
     const order = {
       user: user,
@@ -57,7 +64,7 @@ export class OrdersService {
     return total; 
   }
 
-  async getById(id: string) {
+  async findById(id: string) {
     const order = await this.ordersRepository.findOneBy({ id });
     if (!order) {
       throw new NotFoundException(`Order with id ${id} not found`);

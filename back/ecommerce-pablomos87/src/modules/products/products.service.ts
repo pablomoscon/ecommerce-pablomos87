@@ -11,17 +11,17 @@ export class ProductsService {
         private readonly productsRepository: Repository <Product>,
     ){}
 
-        async getProducts (pageNumber: number, limitNumber: number) {
+        async findProducts (pageNumber: number, limitNumber: number) {
         return await this.productsRepository.find({
             skip: (pageNumber - 1) * limitNumber,
             take: limitNumber,
         });
     };
 
-    async getProductsById (id: string) {
+    async findProductsById (id: string) {
         return await this.productsRepository.findOneBy({ id });
      };
-     async getProductsByIds(productIds: string[]): Promise<Product[]> {
+     async findProductsByIds(productIds: string[]): Promise<Product[]> {
         return this.productsRepository.findByIds(productIds);
       };
      async addProduct(createProductDto: CreateProductDto):Promise <Product> {
@@ -30,7 +30,7 @@ export class ProductsService {
           };
      async updateProduct(id: string, updateProductDto: UpdateProductDto) {
             await this.productsRepository.update(id, updateProductDto);
-            return await this.getProductsById(id);
+            return await this.findProductsById(id);
     };
     async deleteProduct (id:string){
         return await this.productsRepository.delete(id)

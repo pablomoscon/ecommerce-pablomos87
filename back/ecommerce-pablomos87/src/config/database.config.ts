@@ -1,23 +1,61 @@
-import { config as dotenvConfig} from 'dotenv';
+import { config as dotenvConfig } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { registerAs } from '@nestjs/config';
 
-dotenvConfig({ path: '.env.development'})
+dotenvConfig({ path: '.env.development' });
 
-const databaseConfig = {
-  type: 'postgres',
-  host: process.env.DB_HOST,
-  port:process.env.DB_PORT as unknown as number, 
-  username:process.env.DB_USERNAME,
-  password:process.env.DB_PASSWORD,
-  database:process.env.DB_NAME,
-  autoLoadEntities: true,
-  synchronize: false,
+const SqliteTestDataSourceOption: DataSourceOptions = {
+  type: 'sqlite',
+  database: ':memory:',
+  entities: [__dirname + '/../**/*.entity.{ts,js}'],
+  synchronize: true,
+  dropSchema: true,
   logging: true,
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/migrations/*{.ts,.js}']
+  extra: {
+    enumType: 'text',
+  },
 };
 
-export default registerAs('databaseConfig', () => databaseConfig);
+const PostgresDataSourceOption: DataSourceOptions = {
+  type: 'postgres',
+  host: process.env.POSTGRES_HOST,
+  port: parseInt(process.env.POSTGRES_PORT, 10),
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
+  synchronize: false,
+  logging: true,
+  /* dropSchema:true, */
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  migrations: ['dist/migrations/*{.ts,.js}'],
+  subscribers: [],
+  ssl: false,
+  extra: {
+    enumType: 'enun', 
+  },
+};
 
-export const connectionSource = new DataSource (databaseConfig as DataSourceOptions);
+
+
+export const postgresDataSourceConfig = registerAs(
+  'postgres',
+  () => PostgresDataSourceOption,
+);
+
+export const sqliteDataSourceConfig = registerAs(
+  'sqlite',
+  () => SqliteTestDataSourceOption,
+);
+
+const createDataSource = (): DataSource => {
+  const dbType = process.env.DB_TYPE;
+  if (dbType === 'postgres') {
+    return new DataSource(PostgresDataSourceOption);
+  } else if (dbType === 'sqlite') {
+    return new DataSource(SqliteTestDataSourceOption);
+  } else {
+    throw new Error(`Unsupported DB_TYPE: ${dbType}`);
+  }
+};
+
+export const DataSourceInstance = createDataSource();

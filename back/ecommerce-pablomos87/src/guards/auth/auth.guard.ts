@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'src/modules/users/enum/roles.enum';
 import { Request } from 'express';
 
 

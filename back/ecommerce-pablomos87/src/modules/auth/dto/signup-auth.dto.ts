@@ -1,4 +1,4 @@
-import { IsString, IsEmail, Length, Matches, IsNotEmpty, IsEmpty } from 'class-validator';
+import { IsString, IsEmail, Length, Matches, IsNotEmpty, IsEmpty, IsOptional } from 'class-validator';
 
 export class SignupAuthDto {
   @IsString()
@@ -37,6 +37,11 @@ export class SignupAuthDto {
   @Length(5, 20, { message: 'City must be between 5 and 20 characters long' })
   city: string;
 
-  @IsEmpty()
-  isAdmin: boolean;
+  @IsString()
+  @IsOptional()
+  createdAt: string;
+
+  constructor(partial: Partial<SignupAuthDto>) {
+    Object.assign(this, partial)
+  }
 }

@@ -2,16 +2,18 @@ import { Body, Controller, Get, HttpException, HttpStatus, Post } from '@nestjs/
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './entities/category.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 
 @Controller('categories')
+@ApiTags('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) { }
 
 
   @Get()
   async getAlCategories() {
-    return await this.categoriesService.getAllCategories()
+    return await this.categoriesService.findAllCategories()
   }
 
   @Post('add-categories')

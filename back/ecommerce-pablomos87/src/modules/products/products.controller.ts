@@ -7,7 +7,6 @@ import {
   UseGuards,
   HttpStatus,
   Query,
-  Res,
   Param,
   Body,
   HttpCode,
@@ -18,9 +17,13 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
-import { isUUID } from 'class-validator';
+import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { Roles } from 'src/decorators/roles.decorators';
+import { Role } from '../users/enum/roles.enum';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
+@ApiTags('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -32,13 +35,13 @@ export class ProductsController {
   ) {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
-    return await this.productsService.getProducts(pageNumber, limitNumber);
-  }
+    return await this.productsService.findProducts(pageNumber, limitNumber);
+  };
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
-    const product = await this.productsService.getProductsById(id);
+  async findProductsById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const product = await this.productsService.findProductsById(id);
     if (!product) {
       throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     }
@@ -59,7 +62,8 @@ export class ProductsController {
   };
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(HttpStatus.OK)
   async updateProduct(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -91,5 +95,5 @@ export class ProductsController {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
+  };
 };

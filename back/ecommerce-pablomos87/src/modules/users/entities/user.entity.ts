@@ -1,10 +1,10 @@
-import { Order } from "src/modules/orders/entities/order.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "../enum/roles.enum";
+import { Order } from "src/modules/orders/entities/order.entity";
+import { config as dotenvConfig } from 'dotenv';
 
 @Entity()
 export class User {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -29,9 +29,16 @@ export class User {
   @Column({ length: 50, nullable: true })
   city: string;
 
-  @Column({type: 'enum', enum: Role, default: Role.User})
-  administrator: Role;
+  @Column({ length: 50, nullable: true })
+  createdAt: string;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+  })
+  role: Role;
 
   @OneToMany(() => Order, (order) => order.user)
-  orders: Order[]; 
+  orders: Order[];
 }

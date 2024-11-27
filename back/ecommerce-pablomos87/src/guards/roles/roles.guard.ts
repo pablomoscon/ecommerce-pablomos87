@@ -2,7 +2,6 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Role } from 'src/modules/users/enum/roles.enum';
-import * as request from 'supertest';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -18,8 +17,8 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user
-    const hasRole = () => requiredRoles.some((role) => user.administrator?.includes(role));
-    const valid = user?.administrator && hasRole();
+    const hasRole = () => requiredRoles.some((role) => user.role?.includes(role));
+    const valid = user?.role && hasRole();
     if (!valid) {
       throw new UnauthorizedException (
         'You do not have permission and are not allowed to access to this route'

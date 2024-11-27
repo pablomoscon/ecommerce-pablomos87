@@ -1,14 +1,15 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Initial1731360065261 implements MigrationInterface {
-    name = 'Initial1731360065261'
+export class Initial1732707647179 implements MigrationInterface {
+    name = 'Initial1732707647179'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "category" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(50) NOT NULL, "productId" uuid, CONSTRAINT "PK_9c4e4a89e3674fc9f382d733f03" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "product" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(150) NOT NULL, "description" character varying(255) NOT NULL, "price" numeric(10,2) NOT NULL, "stock" integer, "imgUrl" character varying NOT NULL DEFAULT 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWz9tftw9qculFH1gxieWkxL6rbRk_hrXTSg&s', CONSTRAINT "PK_bebc9158e480b949565b4dc7a82" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "order_detail" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "price" numeric(10,2) NOT NULL, CONSTRAINT "PK_0afbab1fa98e2fb0be8e74f6b38" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(50) NOT NULL, "email" character varying(50) NOT NULL, "password" character varying NOT NULL, "phone" character varying(50) NOT NULL, "country" character varying(50), "address" text, "city" character varying(50), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "order" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "date" TIMESTAMP NOT NULL, "userId" uuid, "orderDetailsId" uuid, CONSTRAINT "REL_ab56c88c3f324df235b657e9f6" UNIQUE ("orderDetailsId"), CONSTRAINT "PK_1031171c13130102495201e3e20" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."user_role_enum" AS ENUM('user', 'admin')`);
+        await queryRunner.query(`CREATE TABLE "user" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying(50) NOT NULL, "email" character varying(50) NOT NULL, "password" character varying NOT NULL, "phone" character varying(50) NOT NULL, "country" character varying(50), "address" text, "city" character varying(50), "createdAt" character varying(50), "role" "public"."user_role_enum" NOT NULL DEFAULT 'user', CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "product_order_details_order_detail" ("productId" uuid NOT NULL, "orderDetailId" uuid NOT NULL, CONSTRAINT "PK_d8bbde5b3949a4cb4b4216fc75e" PRIMARY KEY ("productId", "orderDetailId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_f9e45d7e9aa0a0cd272c5f6639" ON "product_order_details_order_detail" ("productId") `);
         await queryRunner.query(`CREATE INDEX "IDX_b8db4b713c36dd5a834edc9128" ON "product_order_details_order_detail" ("orderDetailId") `);
@@ -28,8 +29,9 @@ export class Initial1731360065261 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX "public"."IDX_b8db4b713c36dd5a834edc9128"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_f9e45d7e9aa0a0cd272c5f6639"`);
         await queryRunner.query(`DROP TABLE "product_order_details_order_detail"`);
-        await queryRunner.query(`DROP TABLE "order"`);
         await queryRunner.query(`DROP TABLE "user"`);
+        await queryRunner.query(`DROP TYPE "public"."user_role_enum"`);
+        await queryRunner.query(`DROP TABLE "order"`);
         await queryRunner.query(`DROP TABLE "order_detail"`);
         await queryRunner.query(`DROP TABLE "product"`);
         await queryRunner.query(`DROP TABLE "category"`);

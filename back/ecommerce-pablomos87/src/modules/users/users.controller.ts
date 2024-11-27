@@ -19,8 +19,11 @@ import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { Roles } from 'src/decorators/roles.decorators';
 import { Role } from 'src/modules/users/enum/roles.enum';
 import { RolesGuard } from 'src/guards/roles/roles.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
 
@@ -28,23 +31,22 @@ export class UsersController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     @HttpCode(HttpStatus.OK)
-    async getAllUsers(
+    async findAllUsers(
         @Query('page') page: string = '1',
         @Query('limit') limit: string = '5',
     ) {
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
-        const users = await this.usersService.getUsers(pageNumber, limitNumber);
+        const users = await this.usersService.findUsers(pageNumber, limitNumber);
         return users.map((user) => new UserResponseDto(user, true));
     };
 
     @Get(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    async getUsersById(@Param('id', new ParseUUIDPipe()) id: string) {
-        {
+    async findUsersById(@Param('id', new ParseUUIDPipe()) id: string) {
             try {
-                const user = await this.usersService.getUsersById(id);
+                const user = await this.usersService.findUsersById(id);
                 if (!user) {
                     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
                 }
@@ -54,7 +56,6 @@ export class UsersController {
                     'Error fetching user',
                     error.status || HttpStatus.INTERNAL_SERVER_ERROR,
                 );
-            }
         }
     };
 
