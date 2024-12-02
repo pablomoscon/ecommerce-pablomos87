@@ -130,8 +130,8 @@ describe('ProductsService', () => {
     const result = await service.deleteProduct(productId);
 
     expect(result).toEqual({ deleted: true, id: productId });
-    expect(products.length).toBe(initialProductsLength - 1); // Verifica que el producto se eliminó
-    expect(products.find((p) => p.id === productId)).toBeUndefined(); // Verifica que no exista en la lista
+    expect(products.length).toBe(initialProductsLength - 1); 
+    expect(products.find((p) => p.id === productId)).toBeUndefined();
   });
 
   it('should return deleted: false when trying to delete a non-existing product', async () => {

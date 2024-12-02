@@ -28,16 +28,14 @@ export class AuthService {
 
   async signin(credentials: SignInAuthDto) {
     const user = await this.usersService.findByEmail(credentials.email);
-    console.log('User found:', user);
+
 
     if (!user) {
       throw new BadRequestException('Invalid credentials')
     };
     const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
-    console.log('Password comparison result:', isPasswordValid);
     if (!isPasswordValid) {
-      console.log('Password mismatch'); 
       throw new BadRequestException('Invalid credentials')
     };
     return await this.createToken(user)

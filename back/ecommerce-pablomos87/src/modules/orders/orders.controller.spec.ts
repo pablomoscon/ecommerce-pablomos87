@@ -49,8 +49,7 @@ describe('OrderDetailsController', () => {
         ...createOrderDetailDto,
       });
 
-      // Verifica que el servicio fue llamado correctamente
-      const serviceResult = await service.create(createOrderDetailDto);
+      const serviceResult = await service.createOrderDetail(createOrderDetailDto);
       expect(serviceResult).toEqual(result);
     });
 
@@ -63,18 +62,18 @@ describe('OrderDetailsController', () => {
 
       const error = new Error('Service error');
 
-      // Reasignar la función mock para esta prueba específica
-      const originalCreate = service.create;
-      service.create = async () => {
-        throw error; // Simula un error lanzado por el servicio
+      
+      const originalCreate = service.createOrderDetail;
+      service.createOrderDetail = async () => {
+        throw error; 
       };
 
       await expect(controller.create(createOrderDetailDto)).rejects.toThrow(
         'Service error',
       );
 
-      // Restaurar la función original después de la prueba
-      service.create = originalCreate;
+     
+      service.createOrderDetail = originalCreate;
     });
   });
 });

@@ -9,11 +9,7 @@ const SqliteTestDataSourceOption: DataSourceOptions = {
   database: ':memory:',
   entities: [__dirname + '/../**/*.entity.{ts,js}'],
   synchronize: true,
-  dropSchema: true,
-  logging: true,
-  extra: {
-    enumType: 'text',
-  },
+  dropSchema: true
 };
 
 const PostgresDataSourceOption: DataSourceOptions = {
@@ -30,12 +26,7 @@ const PostgresDataSourceOption: DataSourceOptions = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   subscribers: [],
   ssl: false,
-  extra: {
-    enumType: 'enun', 
-  },
 };
-
-
 
 export const postgresDataSourceConfig = registerAs(
   'postgres',

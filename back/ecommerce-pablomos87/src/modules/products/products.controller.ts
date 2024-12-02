@@ -12,6 +12,7 @@ import {
   HttpCode,
   ParseUUIDPipe,
   HttpException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -25,7 +26,7 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('products')
 @ApiTags('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -48,16 +49,17 @@ export class ProductsController {
     return product;
   };
 
-  @Post('addProduct')
+  @Post('add-product')
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.CREATED)
   async addProduct(@Body() createProductDto: CreateProductDto) {
     try {
       return await this.productsService.addProduct(createProductDto);
     } catch (error) {
-      throw new HttpException(
-        'Error adding product',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      if (error.code === '23505') {
+        throw new HttpException('Product already exists', HttpStatus.CONFLICT);
+      }
+      throw new HttpException('Unexpected error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   };
 
@@ -69,19 +71,23 @@ export class ProductsController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
-      try {
-        const updatedProduct = await this.productsService.updateProduct(
-          id,
-          updateProductDto,
-        );
-        return updatedProduct.id;
-      } catch (error) {
-        throw new HttpException(
-          'Error updating product',
-          error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+    try {
+      const updatedProduct = await this.productsService.updateProduct(
+        id,
+        updateProductDto,
+      );
+      return { updateProductId: updatedProduct.id };
+      
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+          throw new HttpException(error.message, HttpStatus.NOT_FOUND);
       }
-    };
+      throw new HttpException(
+          'Error updating product',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  };
 
   @Delete(':id')
   @UseGuards(AuthGuard)

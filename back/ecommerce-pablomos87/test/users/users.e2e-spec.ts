@@ -28,14 +28,10 @@ describe('Users (e2e)', () => {
     await app.init();
 
     userService = moduleFixture.get<UsersService>(UsersService);
-    
 
     const hashedPassword = await bcrypt.hash('123456', 10);
 
-
-
     jest.spyOn(userService, 'findByEmail').mockImplementation(async (email) => {
-      console.log('Mock de findByEmail llamado con:', email);
       if (email === 'johndou@email.com') {
         return Promise.resolve({
           id: '123',
@@ -76,8 +72,6 @@ describe('Users (e2e)', () => {
       .get('/users')
       .set('Authorization', `Bearer ${authToken}`);
 
-    console.log('Token:', authToken);
-    console.log('Request:', req.body);
 
     expect(req.status).toBe(200);
     expect(req.body).toBeInstanceOf(Array);

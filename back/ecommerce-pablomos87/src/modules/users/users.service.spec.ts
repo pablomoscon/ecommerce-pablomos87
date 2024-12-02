@@ -58,7 +58,7 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: mockUsersRepository, // Usamos el mock con funciones asignadas
+          useValue: mockUsersRepository, 
         },
       ],
     }).compile();
@@ -130,24 +130,24 @@ describe('UsersService', () => {
   });
 
   it('should delete a user and return the correct response', async () => {
-    const userId = '1234fs-1234fs-1234fs-1234fs'; // ID del usuario existente
+    const userId = '1234fs-1234fs-1234fs-1234fs'; 
     const initialUsersLength = users.length;
   
     const result = await service.deleteUser(userId);
   
     expect(result).toEqual({ deleted: true, id: userId });
-    expect(users.length).toBe(initialUsersLength - 1); // Verifica que el usuario se eliminó
-    expect(users.find((u) => u.id === userId)).toBeUndefined(); // Verifica que no exista en la lista
+    expect(users.length).toBe(initialUsersLength - 1); 
+    expect(users.find((u) => u.id === userId)).toBeUndefined(); 
   });
   
   it('should return deleted: false when trying to delete a non-existing user', async () => {
-    const nonExistingId = 'non-existing-id'; // ID de un usuario inexistente
+    const nonExistingId = 'non-existing-id'; 
     const initialUsersLength = users.length;
   
     const result = await service.deleteUser(nonExistingId);
   
     expect(result).toEqual({ deleted: false, id: nonExistingId });
-    expect(users.length).toBe(initialUsersLength); // Verifica que no se eliminó ningún usuario
+    expect(users.length).toBe(initialUsersLength); 
   });
   
 });

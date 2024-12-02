@@ -63,7 +63,7 @@ describe('OrderDetailsService', () => {
       order: { id: 'order-id-2', date: new Date(), user: { id: 'user-id-2' } },
     };
 
-    const result = await service.create(createOrderDetailDto);
+    const result = await service.createOrderDetail(createOrderDetailDto);
 
     expect(result).toHaveProperty('id');
     expect(result.price).toBe(500);
@@ -73,7 +73,7 @@ describe('OrderDetailsService', () => {
   it('should retrieve order details by order ID', async () => {
     const orderId = 'order-id-1';
 
-    const result = await service.getOrderDetailsById(orderId, ['products', 'order']);
+    const result = await service.findOrderDetailsById(orderId, ['products', 'order']);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty('id', 'order-detail-id-1');
@@ -83,7 +83,7 @@ describe('OrderDetailsService', () => {
   it('should return an empty array if no order details are found for an order', async () => {
     const orderId = 'non-existent-order-id';
 
-    const result = await service.getOrderDetailsById(orderId, ['products', 'order']);
+    const result = await service.findOrderDetailsById(orderId, ['products', 'order']);
 
     expect(result).toHaveLength(0);
   });

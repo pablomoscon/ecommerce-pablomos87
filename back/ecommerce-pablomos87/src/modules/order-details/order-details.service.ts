@@ -10,14 +10,14 @@ export class OrderDetailsService {
   @InjectRepository (OrderDetail) private orderDetailsRepository: Repository<OrderDetail>,
 ) {}
 
-async create(createOrderDetailDto: CreateOrderDetailDto) {
+async createOrderDetail(createOrderDetailDto: CreateOrderDetailDto) {
   if (!createOrderDetailDto.order) {
     throw new Error('Invalid data: order is required');
   }
   const newOrderDetail = this.orderDetailsRepository.create(createOrderDetailDto);
   return await this.orderDetailsRepository.save(newOrderDetail);
 }
-  async getOrderDetailsById(
+  async findOrderDetailsById(
     orderId: string,
     relations: string[] = [],
 ): Promise<OrderDetail[]> {

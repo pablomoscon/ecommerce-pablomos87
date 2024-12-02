@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User} from "./entities/user.entity";
+import { User } from "./entities/user.entity";
 import { Repository } from "typeorm";
 
 @Injectable()
@@ -19,15 +19,15 @@ export class UsersService {
             relations: ['orders'],
         });
     };
-    
+
     async findUsersById(id: string) {
-        return await this.usersRepository.findOne({ 
+        return await this.usersRepository.findOne({
             where: { id },
             relations: ['orders'],
-    });
+        });
     };
-    
-    async createUser(createUserDto: CreateUserDto) {  
+
+    async createUser(createUserDto: CreateUserDto) {
         const newUser = this.usersRepository.create(createUserDto);
         return await this.usersRepository.save(newUser);
     }
@@ -40,12 +40,9 @@ export class UsersService {
     async deleteUser(id: string) {
         return await this.usersRepository.delete(id);
     }
-    
+
     async findByEmail(email: string) {
-        console.log('findByEmail llamado con:', email);
-  const user = await this.usersRepository.findOne({ where: { email } });
-  console.log('Usuario encontrado en findByEmail:', user);
-  return user;
-        
+        const user = await this.usersRepository.findOne({ where: { email } });
+        return user;
     }
 };

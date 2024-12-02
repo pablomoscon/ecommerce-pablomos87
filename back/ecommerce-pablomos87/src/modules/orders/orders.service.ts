@@ -1,5 +1,5 @@
 import { ProductsService } from './../products/products.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto, PartialProducts } from './dto/create-order.dto';
 import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
@@ -21,9 +21,11 @@ export class OrdersService {
     const { userId, products } = createOrderDto;
 
     if (!products || products.length === 0) {
-      throw new Error('Order must contain at least one product');
-    };
-
+      throw new HttpException(
+        'Order must contain at least one product',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const user = await this.usersService.findUsersById(userId);
 
     if (!user) {
@@ -45,7 +47,7 @@ export class OrdersService {
     orderDetail.price = total;
     orderDetail.products = products;
     orderDetail.order = orderEntity;
-    const orderDetailEntity = await this.orderDetailsService.create(orderDetail);
+    const orderDetailEntity = await this.orderDetailsService.createOrderDetail(orderDetail);
     return orderDetailEntity;
   }
 
@@ -62,14 +64,14 @@ export class OrdersService {
     console.log(`Total Price  ${total}`);
     
     return total; 
-  }
+  };
 
-  async findById(id: string) {
+  async findOrderById(id: string) {
     const order = await this.ordersRepository.findOneBy({ id });
     if (!order) {
       throw new NotFoundException(`Order with id ${id} not found`);
     }
-    const orderDetail = await this.orderDetailsService.getOrderDetailsById(
+    const orderDetail = await this.orderDetailsService.findOrderDetailsById(
       order.id,
       ['products', 'order'],
     );

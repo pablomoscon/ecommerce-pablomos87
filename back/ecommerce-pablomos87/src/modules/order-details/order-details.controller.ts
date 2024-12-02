@@ -11,7 +11,7 @@ export class OrderDetailsController {
   @Post()
  async create(@Body() createOrderDetailDto: CreateOrderDetailDto) {
   try {
-    return await this.orderDetailsService.create(createOrderDetailDto);
+    return await this.orderDetailsService.createOrderDetail(createOrderDetailDto);
   } catch (error) {
     throw error;
     }

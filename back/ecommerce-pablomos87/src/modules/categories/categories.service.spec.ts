@@ -50,7 +50,7 @@ describe('CategoriesService', () => {
 
   it('should call findAllCategories and return an empty array', async () => {
     const result = await service.findAllCategories();
-    expect(result).toEqual([]); // Simula que no hay categorías
+    expect(result).toEqual([]);
   });
 
   it('should call addCategories and create categories if they do not exist', async () => {
@@ -69,11 +69,10 @@ describe('CategoriesService', () => {
     const categoryDto: CreateCategoryDto = { name: 'Existing Category' };
 
     const existingCategory = await mockRepository.findOneBy({ name: categoryDto.name });
-    expect(existingCategory).toBeInstanceOf(Category); // La categoría ya existe
+    expect(existingCategory).toBeInstanceOf(Category); 
 
     await service.addCategories([categoryDto]);
 
-    // No se debería crear ni guardar una nueva categoría
     const createdCategory = mockRepository.create(categoryDto);
     expect(createdCategory).toEqual(existingCategory);
   });

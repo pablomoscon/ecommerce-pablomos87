@@ -73,7 +73,7 @@ describe('UsersController', () => {
 
 
   it('findUsersById() should return a user by ID', async () => {
-    const user = await controller.findUsersById('1234fs-1234fs-1234fs-1234fs'); // Asegúrate de llamar a la función correcta
+    const user = await controller.findUsersById('1234fs-1234fs-1234fs-1234fs');
     expect(user).toBeDefined();
     expect(user).toHaveProperty('id', '1234fs-1234fs-1234fs-1234fs');
     expect(user).toHaveProperty('email', 'johndoe@email.com');

@@ -30,7 +30,7 @@ describe('CategoriesController', () => {
       providers: [
         {
           provide: CategoriesService,
-          useValue: mockCategoriesService, // Simulamos el servicio
+          useValue: mockCategoriesService, 
         },
       ],
     }).compile();

@@ -92,7 +92,7 @@ describe('OrdersService', () => {
           }),
         } as OrderDetail;
       },
-      getOrderDetailsById: async (orderId: string): Promise<OrderDetail[]> => {
+      findOrderDetailsById: async (orderId: string): Promise<OrderDetail[]> => {
         return [{
           id: 'order-detail-id',
           order: {
@@ -175,7 +175,7 @@ describe('OrdersService', () => {
   });
 
   it('getById() retrieves an order and its details', async () => {
-    const result = await service.findById('order-id-1');
+    const result = await service.findOrderById('order-id-1');
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty('id', 'order-detail-id');
@@ -183,7 +183,7 @@ describe('OrdersService', () => {
   });
 
   it('getById() throws NotFoundException if the order does not exist', async () => {
-    await expect(service.findById('invalid-order-id')).rejects.toThrowError(
+    await expect(service.findOrderById('invalid-order-id')).rejects.toThrowError(
       new NotFoundException('Order with id invalid-order-id not found'),
     );
   });

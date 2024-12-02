@@ -3,7 +3,7 @@ import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
 import { AuthGuard } from 'src/guards/auth/auth.guard';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid'; // Importa la librería uuid
+import { v4 as uuidv4 } from 'uuid'; 
 
 describe('FilesController', () => {
   let controller: FilesController;
@@ -11,7 +11,7 @@ describe('FilesController', () => {
 
   const mockFilesService = {
     uploadImage: async (id: string, file: Express.Multer.File) => {
-      return { id, fileName: file.originalname }; // Simula un resultado exitoso
+      return { id, fileName: file.originalname }; 
     },
   };
 
@@ -41,7 +41,7 @@ describe('FilesController', () => {
 
   describe('uploadImageAndUpdateProduct', () => {
     it('should upload an image successfully', async () => {
-      const id = uuidv4(); // Genera un UUID válido dinámicamente
+      const id = uuidv4(); 
       const file: Express.Multer.File = {
         originalname: 'test-image.jpg',
         buffer: Buffer.from('test content'),
@@ -64,7 +64,7 @@ describe('FilesController', () => {
     });
 
     it('should throw an error if UUID is invalid', async () => {
-      const invalidId = '12345'; // UUID inválido
+      const invalidId = '12345'; 
       const file: Express.Multer.File = {
         originalname: 'test-image.jpg',
         buffer: Buffer.from('test content'),

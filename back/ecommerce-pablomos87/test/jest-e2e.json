@@ -7,6 +7,8 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "collectCoverageFrom": ["**/*.ts"],
-  "moduleDirectories": ["<rootDir>/../", "node_modules"] 
+  "moduleDirectories": ["<rootDir>/../", "node_modules"]
+  
 }
+
 

@@ -3,6 +3,7 @@ import { Role } from "../enum/roles.enum";
 import { Order } from "src/modules/orders/entities/order.entity";
 import { config as dotenvConfig } from 'dotenv';
 
+dotenvConfig({ path: '.env.development' });
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -31,12 +32,12 @@ export class User {
 
   @Column({ length: 50, nullable: true })
   createdAt: string;
-
-  @Column({
-    type: 'enum',
-    enum: Role,
-    default: Role.User,
-  })
+  
+  @Column(
+    process.env.NODE_ENV === 'test'
+      ? { type: 'text', default: 'User' }
+      : { type: 'enum', enum: Role, default: Role.User }
+  )
   role: Role;
 
   @OneToMany(() => Order, (order) => order.user)
