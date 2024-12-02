@@ -6,10 +6,14 @@ import { CategoriesSeed } from './seeds/categories/categories.seed';
 import { ProductsSeed } from './seeds/products/products.seed';
 import { AdminUsersSeed } from './seeds/admin-user/admin-user-seed';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DataSourceInstance, postgresDataSourceConfig } from './config/database.config';
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  await DataSourceInstance.initialize();
+  await DataSourceInstance.runMigrations();
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist:true,
     forbidNonWhitelisted: true,
@@ -23,6 +27,7 @@ async function bootstrap() {
   .setVersion('1.0')
   .addBearerAuth()
   .build();
+
 
 const document = SwaggerModule.createDocument(app, swaggerConfig);
 SwaggerModule.setup('docs', app, document);
