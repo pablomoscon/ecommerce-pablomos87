@@ -3,7 +3,7 @@ import { Role } from "../enum/roles.enum";
 import { Order } from "src/modules/orders/entities/order.entity";
 import { config as dotenvConfig } from 'dotenv';
 
-dotenvConfig({ path: '.env.development' });
+dotenvConfig({ path: '.env.development.local' });
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
