@@ -6,7 +6,8 @@ import { CategoriesSeed } from './seeds/categories/categories.seed';
 import { ProductsSeed } from './seeds/products/products.seed';
 import { AdminUsersSeed } from './seeds/admin-user/admin-user-seed';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { DataSourceInstance, postgresDataSourceConfig } from './config/database.config';
+import { DataSourceInstance } from './config/database.config';
+import { MigrationExecutor } from 'typeorm';
 
 
 async function bootstrap() {
