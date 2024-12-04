@@ -14,11 +14,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await DataSourceInstance.initialize();
 
+   await DataSourceInstance.initialize();
   const migrationExecutor = new MigrationExecutor(DataSourceInstance);
   const executedMigrations = await migrationExecutor.getExecutedMigrations();
   if (executedMigrations.length === 0) {
     await DataSourceInstance.runMigrations();
+<<<<<<< HEAD
   }
+=======
+  };
+>>>>>>> 60a5620a069b3e7d0a2a6581bfe4a888c37e0587
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
@@ -35,8 +40,13 @@ async function bootstrap() {
     .build();
 
 
+<<<<<<< HEAD
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
+=======
+const document = SwaggerModule.createDocument(app, swaggerConfig);
+SwaggerModule.setup('docs', app, document);
+>>>>>>> 60a5620a069b3e7d0a2a6581bfe4a888c37e0587
 
   const categoriesSeed = app.get(CategoriesSeed);
   await categoriesSeed.seed();
