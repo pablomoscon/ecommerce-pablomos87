@@ -9,11 +9,11 @@ import { AdminUsersSeed } from "./admin-user/admin-user-seed";
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Category, Product, User])],
-    providers: [CategoriesSeed, ProductsSeed, AdminUsersSeed],
-    exports: [CategoriesSeed, ProductsSeed, AdminUsersSeed],
-  })
-  export class SeedsModule {}
+  imports: [TypeOrmModule.forFeature([Category, Product, User])],
+  providers: [CategoriesSeed, ProductsSeed, AdminUsersSeed],
+  exports: [CategoriesSeed, ProductsSeed, AdminUsersSeed],
+})
+export class SeedsModule { }
 
 
 

@@ -31,12 +31,12 @@ const mockUsersRepository = {
   },
   update: (id: string, updateUserDto: UpdateUserDto) => {
     const user = users.find((u) => u.id === id);
-  if (!user) return Promise.resolve(null);
+    if (!user) return Promise.resolve(null);
 
-  const updatedUser = { ...user, ...updateUserDto };
+    const updatedUser = { ...user, ...updateUserDto };
 
-  users = users.map((u) => (u.id === id ? updatedUser : u));
-  return Promise.resolve(updatedUser);
+    users = users.map((u) => (u.id === id ? updatedUser : u));
+    return Promise.resolve(updatedUser);
   },
   delete: (id: string) => {
     const user = users.find((u) => u.id === id);
@@ -58,7 +58,7 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: mockUsersRepository, 
+          useValue: mockUsersRepository,
         },
       ],
     }).compile();
@@ -72,20 +72,20 @@ describe('UsersService', () => {
   });
 
   it('should return the correct user based on the id', async () => {
-    const userId = '1234fs-1234fs-1234fs-1235fs'; 
-  
-  
+    const userId = '1234fs-1234fs-1234fs-1235fs';
+
+
     const user = await service.findUsersById(userId);
-  
-    expect(user).toBeDefined(); 
-    expect(user?.id).toBe(userId); 
+
+    expect(user).toBeDefined();
+    expect(user?.id).toBe(userId);
   });
-  
+
   it('should return undefined if the user does not exist', async () => {
     const userId = '1';
-  
+
     const user = await service.findUsersById(userId);
-  
+
     expect(user).toBeUndefined();
   });
 
@@ -102,14 +102,14 @@ describe('UsersService', () => {
     };
 
     const mockUser = {
-      id: '1234fs-1234fs-1234fs-1236fs', 
+      id: '1234fs-1234fs-1234fs-1236fs',
       ...createUserDto,
     };
 
     mockUsersRepository.create(createUserDto);
     const result = await service.createUser(createUserDto);
 
-    expect(result).toEqual(mockUser); 
+    expect(result).toEqual(mockUser);
   });
 
   it('should update and return the user when valid data is provided', async () => {
@@ -118,36 +118,36 @@ describe('UsersService', () => {
       name: 'Updated User 1',
       email: 'user-updated@email.com',
     };
-  
+
     const updatedUser = {
       id: userId,
       ...updateUserDto,
     };
-  
+
     const result = await service.updateUser(userId, updateUserDto);
-  
+
     expect(result).toEqual(updatedUser);
   });
 
   it('should delete a user and return the correct response', async () => {
-    const userId = '1234fs-1234fs-1234fs-1234fs'; 
+    const userId = '1234fs-1234fs-1234fs-1234fs';
     const initialUsersLength = users.length;
-  
+
     const result = await service.deleteUser(userId);
-  
+
     expect(result).toEqual({ deleted: true, id: userId });
-    expect(users.length).toBe(initialUsersLength - 1); 
-    expect(users.find((u) => u.id === userId)).toBeUndefined(); 
+    expect(users.length).toBe(initialUsersLength - 1);
+    expect(users.find((u) => u.id === userId)).toBeUndefined();
   });
-  
+
   it('should return deleted: false when trying to delete a non-existing user', async () => {
-    const nonExistingId = 'non-existing-id'; 
+    const nonExistingId = 'non-existing-id';
     const initialUsersLength = users.length;
-  
+
     const result = await service.deleteUser(nonExistingId);
-  
+
     expect(result).toEqual({ deleted: false, id: nonExistingId });
-    expect(users.length).toBe(initialUsersLength); 
+    expect(users.length).toBe(initialUsersLength);
   });
-  
+
 });

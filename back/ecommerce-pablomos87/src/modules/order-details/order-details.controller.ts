@@ -6,13 +6,14 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('order-details')
 @ApiTags('order-details')
 export class OrderDetailsController {
-  constructor(private readonly orderDetailsService: OrderDetailsService) {}
+  constructor(private readonly orderDetailsService: OrderDetailsService) { }
 
   @Post()
- async create(@Body() createOrderDetailDto: CreateOrderDetailDto) {
-  try {
-    return await this.orderDetailsService.createOrderDetail(createOrderDetailDto);
-  } catch (error) {
-    throw error;
+  async create(@Body() createOrderDetailDto: CreateOrderDetailDto) {
+    try {
+      return await this.orderDetailsService.createOrderDetail(createOrderDetailDto);
+    } catch (error) {
+      throw error;
     }
-}};
+  }
+};

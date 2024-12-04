@@ -25,7 +25,7 @@ describe('Products (e2e)', () => {
       orderDetails: null,
       ...overrides,
     };
-  }
+  };
 
   beforeEach(async () => {
     process.env.ENVIRONMENT = 'TEST';
@@ -70,13 +70,13 @@ describe('Products (e2e)', () => {
     });
 
     const loginResponse = await request(app.getHttpServer())
-    .post('/auth/signin')
-    .send({
-      email: 'johndou@email.com',
-      password: '123456',
-    });
-    
-  authToken = loginResponse.body['token'];
+      .post('/auth/signin')
+      .send({
+        email: 'johndou@email.com',
+        password: '123456',
+      });
+
+    authToken = loginResponse.body['token'];
 
   });
 
@@ -93,7 +93,7 @@ describe('Products (e2e)', () => {
     jest.spyOn(productsService, 'findProducts').mockResolvedValue(mockProducts);
 
     const req = await request(app.getHttpServer())
-    .get('/products')
+      .get('/products')
 
     expect(req.status).toBe(200);
     expect(req.body).toBeInstanceOf(Array);
@@ -102,13 +102,13 @@ describe('Products (e2e)', () => {
   });
 
   it('/products/:id (GET) should return a product by ID', async () => {
-    
+
     const mockProduct = createMockProduct({ id: '123e4567-e89b-12d3-a456-426614174000' });
 
     jest.spyOn(productsService, 'findProductsById').mockResolvedValue(mockProduct);
 
     const req = await request(app.getHttpServer())
-    .get('/products/123e4567-e89b-12d3-a456-426614174000');
+      .get('/products/123e4567-e89b-12d3-a456-426614174000');
 
     expect(req.status).toBe(200);
     expect(req.body.name).toBe('Product 1');
@@ -139,13 +139,13 @@ describe('Products (e2e)', () => {
 
   it('/products/:id (PUT) should update a product', async () => {
     const updateProductDto = { name: 'Updated Product', price: 150 };
-  
+
     const mockProduct = createMockProduct({
       id: '123e4567-e89b-12d3-a456-426614174000'
     });
-  
+
     jest.spyOn(productsService, 'updateProduct').mockResolvedValue(mockProduct);
-  
+
     const req = await request(app.getHttpServer())
       .put('/products/123e4567-e89b-12d3-a456-426614174000')
       .set('Authorization', `Bearer ${authToken}`)
@@ -158,15 +158,15 @@ describe('Products (e2e)', () => {
   it('/products/:id (DELETE) should delete a product', async () => {
     const mockDeleteResult = {
       raw: [],
-      affected: 1,  
+      affected: 1,
     };
-  
+
     jest.spyOn(productsService, 'deleteProduct').mockResolvedValue(mockDeleteResult);
-  
+
     const req = await request(app.getHttpServer())
-      .delete('/products/123e4567-e89b-12d3-a456-426614174000')  
+      .delete('/products/123e4567-e89b-12d3-a456-426614174000')
       .set('Authorization', `Bearer ${authToken}`);
-  
+
     expect(req.status).toBe(200);
     expect(req.body.affected).toBe(1);
   });

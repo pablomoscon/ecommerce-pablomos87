@@ -5,4 +5,4 @@ export function loggerGloblal(req: Request, res: Response, next: NextFunction) {
     `You are executing a ${req.method} method on the ${req.url} route at ${new Date().toISOString()}`
   );
   next();
-}
+};

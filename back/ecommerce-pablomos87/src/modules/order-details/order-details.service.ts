@@ -6,24 +6,24 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class OrderDetailsService {
-  constructor (
-  @InjectRepository (OrderDetail) private orderDetailsRepository: Repository<OrderDetail>,
-) {}
+  constructor(
+    @InjectRepository(OrderDetail) private orderDetailsRepository: Repository<OrderDetail>,
+  ) { }
 
-async createOrderDetail(createOrderDetailDto: CreateOrderDetailDto) {
-  if (!createOrderDetailDto.order) {
-    throw new Error('Invalid data: order is required');
+  async createOrderDetail(createOrderDetailDto: CreateOrderDetailDto) {
+    if (!createOrderDetailDto.order) {
+      throw new Error('Invalid data: order is required');
+    }
+    const newOrderDetail = this.orderDetailsRepository.create(createOrderDetailDto);
+    return await this.orderDetailsRepository.save(newOrderDetail);
   }
-  const newOrderDetail = this.orderDetailsRepository.create(createOrderDetailDto);
-  return await this.orderDetailsRepository.save(newOrderDetail);
-}
   async findOrderDetailsById(
     orderId: string,
     relations: string[] = [],
-): Promise<OrderDetail[]> {
+  ): Promise<OrderDetail[]> {
     return await this.orderDetailsRepository.find({
-        where: { order: { id: orderId } },
-        relations: relations,
+      where: { order: { id: orderId } },
+      relations: relations,
     });
-};
+  };
 };

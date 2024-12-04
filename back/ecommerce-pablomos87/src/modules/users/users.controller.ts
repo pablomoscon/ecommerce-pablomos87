@@ -45,17 +45,17 @@ export class UsersController {
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     async findUsersById(@Param('id', new ParseUUIDPipe()) id: string) {
-            try {
-                const user = await this.usersService.findUsersById(id);
-                if (!user) {
-                    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-                }
-                return new UserResponseDto(user);
-            } catch (error) {
-                throw new HttpException(
-                    'Error fetching user',
-                    error.status || HttpStatus.INTERNAL_SERVER_ERROR,
-                );
+        try {
+            const user = await this.usersService.findUsersById(id);
+            if (!user) {
+                throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+            }
+            return new UserResponseDto(user);
+        } catch (error) {
+            throw new HttpException(
+                'Error fetching user',
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
         }
     };
 

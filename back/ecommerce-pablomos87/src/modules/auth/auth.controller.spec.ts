@@ -1,4 +1,3 @@
-import { hash } from "crypto";
 import { Test, TestingModule } from "@nestjs/testing";
 import { SignupAuthDto } from "../auth/dto/signup-auth.dto";
 import { SignInAuthDto } from "../auth/dto/signin-auth.dto";
@@ -46,9 +45,9 @@ describe('AuthController', () => {
             providers: [
                 AuthService,
                 {
-                    provide: getRepositoryToken(User),   
-                    useValue:   
-         {},
+                    provide: getRepositoryToken(User),
+                    useValue:
+                        {},
                 },
                 {
                     provide: JwtService,
@@ -103,7 +102,7 @@ describe('AuthController', () => {
     it('signIn() should return a token', async () => {
 
         const token = await controller.authLogin(mockSignInUser);
-        
+
         expect(token).toBeDefined();
         expect(token).toHaveProperty('token');
     });

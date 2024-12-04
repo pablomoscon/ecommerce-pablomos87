@@ -6,14 +6,14 @@ import { CloudinaryService } from "src/service/cloudinary/cloudinary.service";
 export class FilesService {
   constructor(
     private readonly cloudinaryService: CloudinaryService,
-    private readonly productsService: ProductsService, 
-  ) {}
+    private readonly productsService: ProductsService,
+  ) { }
 
   async uploadImage(id: string, file: Express.Multer.File) {
 
- const uploadedImageUrl = await this.cloudinaryService.uploadFile(file.buffer, file.originalname);
- await this.updateProductWithImageUrl(id, uploadedImageUrl); 
- return uploadedImageUrl;
+    const uploadedImageUrl = await this.cloudinaryService.uploadFile(file.buffer, file.originalname);
+    await this.updateProductWithImageUrl(id, uploadedImageUrl);
+    return uploadedImageUrl;
   };
 
   async getUrl(publicId: string) {
@@ -22,6 +22,6 @@ export class FilesService {
 
   async updateProductWithImageUrl(id: string, uploadedImageUrl: string): Promise<void> {
     const imgUrl = uploadedImageUrl;
-    await this.productsService.updateProduct(id, {imgUrl} ); 
+    await this.productsService.updateProduct(id, { imgUrl });
   }
 };

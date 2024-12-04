@@ -8,8 +8,8 @@ import { ProductsService } from '../products/products.service';
 import { CloudinaryConfig } from 'src/config/cloudinary.config';
 
 @Module({
-  imports:  [TypeOrmModule.forFeature([ Product])],
+  imports: [TypeOrmModule.forFeature([Product])],
   controllers: [FilesController],
   providers: [FilesService, CloudinaryService, ProductsService, CloudinaryConfig],
 })
-export class FilesModule {}
+export class FilesModule { }

@@ -20,9 +20,9 @@ describe('OrderDetailsController', () => {
       controllers: [OrderDetailsController],
       providers: [
         {
-          provide: OrderDetailsService, 
+          provide: OrderDetailsService,
           useValue: mockOrderDetailsService,
-          },
+        },
       ],
     }).compile();
 
@@ -52,10 +52,10 @@ describe('OrderDetailsController', () => {
     it('should throw an error if invalid data is provided', async () => {
       const createOrderDetailDto: CreateOrderDetailDto = {
         price: 100,
-        order: null, 
+        order: null,
         products: [{ id: 1, quantity: 2 }],
       };
       await expect(controller.create(createOrderDetailDto)).rejects.toThrow('Invalid data: order is required');
     });
-    });
+  });
 });

@@ -53,17 +53,17 @@ export class OrdersService {
 
   private async calculateTotal(products: Array<PartialProducts>): Promise<number> {
     let total = 0;
-  
+
     for (const product of products) {
-      
+
       const productPrice = await this.productsService.buyProduct(product.id);
       total += Number(productPrice);
       console.log(`Price for product ${product.id}: ${productPrice}`);
     }
-  
+
     console.log(`Total Price  ${total}`);
-    
-    return total; 
+
+    return total;
   };
 
   async findOrderById(id: string) {
