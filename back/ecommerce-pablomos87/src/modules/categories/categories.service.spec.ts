@@ -69,7 +69,7 @@ describe('CategoriesService', () => {
     const categoryDto: CreateCategoryDto = { name: 'Existing Category' };
 
     const existingCategory = await mockRepository.findOneBy({ name: categoryDto.name });
-    expect(existingCategory).toBeInstanceOf(Category); 
+    expect(existingCategory).toBeInstanceOf(Category);
 
     await service.addCategories([categoryDto]);
 

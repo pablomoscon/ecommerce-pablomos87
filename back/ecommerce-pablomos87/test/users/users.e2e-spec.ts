@@ -15,13 +15,13 @@ describe('Users (e2e)', () => {
     process.env.ENVIRONMENT = 'TEST';
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
-    }) 
-    .overrideProvider(UsersService) 
+    })
+      .overrideProvider(UsersService)
       .useValue({
         findByEmail: jest.fn(),
         findUsers: jest.fn(),
       })
-    .compile();
+      .compile();
 
     app = moduleFixture.createNestApplication();
 

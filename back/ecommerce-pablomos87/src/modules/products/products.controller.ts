@@ -77,14 +77,14 @@ export class ProductsController {
         updateProductDto,
       );
       return { updateProductId: updatedProduct.id };
-      
+
     } catch (error) {
       if (error instanceof NotFoundException) {
-          throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
       }
       throw new HttpException(
-          'Error updating product',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        'Error updating product',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   };

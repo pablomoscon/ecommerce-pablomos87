@@ -17,7 +17,7 @@ const mockProductsRepository = {
   },
   findOneBy: ({ id }: { id: string }) => {
     const product = products.find((p) => p.id === id);
-    return Promise.resolve(product); 
+    return Promise.resolve(product);
   },
   create: (createProductDto: CreateProductDto) => ({
     ...createProductDto,
@@ -73,7 +73,7 @@ describe('ProductsService', () => {
   });
 
   it('should return the correct product based on the id', async () => {
-    const productId = 'abcd1234'; 
+    const productId = 'abcd1234';
     const product = await service.findProductsById(productId);
     expect(product).toBeDefined();
     expect(product?.id).toBe(productId);
@@ -95,7 +95,7 @@ describe('ProductsService', () => {
     };
 
     const mockProduct = {
-      id: 'abcd1236', 
+      id: 'abcd1236',
       ...CreateProductDto,
     };
 
@@ -124,28 +124,28 @@ describe('ProductsService', () => {
   });
 
   it('should delete a product and return the correct response', async () => {
-    const productId = 'abcd1234'; 
+    const productId = 'abcd1234';
     const initialProductsLength = products.length;
 
     const result = await service.deleteProduct(productId);
 
     expect(result).toEqual({ deleted: true, id: productId });
-    expect(products.length).toBe(initialProductsLength - 1); 
+    expect(products.length).toBe(initialProductsLength - 1);
     expect(products.find((p) => p.id === productId)).toBeUndefined();
   });
 
   it('should return deleted: false when trying to delete a non-existing product', async () => {
-    const nonExistingId = 'non-existing-id'; 
+    const nonExistingId = 'non-existing-id';
     const initialProductsLength = products.length;
 
     const result = await service.deleteProduct(nonExistingId);
 
     expect(result).toEqual({ deleted: false, id: nonExistingId });
-    expect(products.length).toBe(initialProductsLength); 
+    expect(products.length).toBe(initialProductsLength);
   });
 
   it('should throw an error when trying to buy a product out of stock', async () => {
-    const productId = 'abcd1235'; 
+    const productId = 'abcd1235';
     try {
       await service.buyProduct(productId);
     } catch (e) {
@@ -154,16 +154,16 @@ describe('ProductsService', () => {
   });
 
   it('should buy a product and decrease the stock', async () => {
-    const productId = 'abcd1234'; 
-    const product = products.find((p) => p.id === productId);  
+    const productId = 'abcd1234';
+    const product = products.find((p) => p.id === productId);
     if (!product) {
       throw new Error('Product not found');
     }
-    
+
     const initialStock = product.stock;
     const result = await service.buyProduct(productId);
-  
-    expect(result).toBe(product.price);  
+
+    expect(result).toBe(product.price);
     expect(products.find((p) => p.id === productId)?.stock).toBe(initialStock - 1);
   });
 });

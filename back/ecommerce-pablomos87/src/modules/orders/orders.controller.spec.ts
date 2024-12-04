@@ -11,7 +11,7 @@ describe('OrderDetailsController', () => {
   const mockOrderDetailsService = {
     create: async (dto: CreateOrderDetailDto
     ) => {
-      return { id: '1', ...dto }; 
+      return { id: '1', ...dto };
     },
   };
 
@@ -62,17 +62,17 @@ describe('OrderDetailsController', () => {
 
       const error = new Error('Service error');
 
-      
+
       const originalCreate = service.createOrderDetail;
       service.createOrderDetail = async () => {
-        throw error; 
+        throw error;
       };
 
       await expect(controller.create(createOrderDetailDto)).rejects.toThrow(
         'Service error',
       );
 
-     
+
       service.createOrderDetail = originalCreate;
     });
   });

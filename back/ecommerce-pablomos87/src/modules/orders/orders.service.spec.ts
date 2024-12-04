@@ -4,7 +4,6 @@ import { UsersService } from '../users/users.service';
 import { ProductsService } from '../products/products.service';
 import { OrderDetailsService } from '../order-details/order-details.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { NotFoundException } from '@nestjs/common';
@@ -134,7 +133,7 @@ describe('OrdersService', () => {
     const result = await service.addOrder(createOrderDto);
 
     expect(result).toHaveProperty('id', 'order-detail-id');
-    expect(result).toHaveProperty('price', 100); 
+    expect(result).toHaveProperty('price', 100);
     expect(result.products).toHaveLength(1);
     expect(result.order).toHaveProperty('id');
     expect(result.order.id).toMatch(/^order-id-.+/);
@@ -194,6 +193,6 @@ describe('OrdersService', () => {
       { id: 'product-id-2', price: 200 } as Product,
     ]);
 
-    expect(total).toBe(300); 
+    expect(total).toBe(300);
   });
 });

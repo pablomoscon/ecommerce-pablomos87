@@ -21,7 +21,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('orders')
 export class OrdersController {
   private readonly logger = new Logger(OrdersController.name);
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
   @Post()
   @UseGuards(AuthGuard)
@@ -45,11 +45,11 @@ export class OrdersController {
       const order = await this.ordersService.findOrderById(id);
       return order;
     } catch (error) {
-  
+
       if (error instanceof NotFoundException) {
-        throw error; 
+        throw error;
       }
-  
+
       const message = error.response?.message || 'Error fetching order';
       const status = error.status || HttpStatus.INTERNAL_SERVER_ERROR;
       throw new HttpException(message, status);

@@ -6,7 +6,7 @@ import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 export class CloudinaryService {
   constructor(
     @Inject('CLOUDINARY') private cloudinaryInstance: typeof cloudinary
-  ) {}
+  ) { }
 
 
   async uploadFile(buffer: Buffer, originalname?: string): Promise<string> {
@@ -18,10 +18,10 @@ export class CloudinaryService {
 
     return new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        options, 
+        options,
         (error, result) => {
           error ? reject(error) : resolve(result.secure_url);
-      });
+        });
       stream.write(buffer);
       stream.end();
     });

@@ -13,7 +13,7 @@ import { BadRequestException } from "@nestjs/common";
 let service: AuthService;
 let mockUser: SignupAuthDto;
 let mockUserService: Partial<UsersService>;
-let mockJwtService: Partial<JwtService>; 
+let mockJwtService: Partial<JwtService>;
 
 beforeEach(async () => {
   mockUserService = {
@@ -96,12 +96,12 @@ it('signIn() throws an error if the email is not found', async () => {
 
 it('signIn() returns an error if the password is invalid', async () => {
   const passwordHash = await bcrypt.hash('123456', 10);
-  mockUserService.findByEmail = (email: string) => 
+  mockUserService.findByEmail = (email: string) =>
     Promise.resolve({
       id: '1234fs-1234fs-1234fs-1234fs',
       role: Role.User,
       email: mockUser.email,
-      password: passwordHash, 
+      password: passwordHash,
       name: mockUser.name,
       phone: mockUser.phone,
       address: mockUser.address,
@@ -110,7 +110,7 @@ it('signIn() returns an error if the password is invalid', async () => {
 
   const signInDto: SignInAuthDto = {
     email: mockUser.email,
-    password: 'Invalid credentials', 
+    password: 'Invalid credentials',
   };
 
   try {
@@ -127,7 +127,7 @@ it('signIn() returns a JWT token if credentials are correct', async () => {
       id: '1234fs-1234fs-1234fs-1234fs',
       role: Role.User,
       email: mockUser.email,
-      password: passwordHash, 
+      password: passwordHash,
       name: mockUser.name,
       phone: mockUser.phone,
       address: mockUser.address,

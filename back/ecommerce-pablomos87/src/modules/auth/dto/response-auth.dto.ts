@@ -10,7 +10,7 @@ export class AuthResponseDto {
     city: string;
     createdAt: string;
     orders: Order[];
- 
+
 
     constructor(partial: Partial<AuthResponseDto>) {
         const { id, name, email, address, phone, country, city, createdAt, orders } = partial;
@@ -23,6 +23,6 @@ export class AuthResponseDto {
         this.city = city;
         this.createdAt = createdAt;
         this.orders = orders;
-        
+
     }
 }
