@@ -11,7 +11,7 @@ export class AdminUsersSeed {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
   async seed() {
 
     const existingAdminUsers = (await this.userRepository.find()).map(
@@ -34,5 +34,5 @@ export class AdminUsersSeed {
         await this.userRepository.save(user);
       }
     }
-}
+  }
 }

@@ -33,11 +33,11 @@ export class ProductsService {
 
     async updateProduct(id: string, updateProductDto: UpdateProductDto) {
         const updateResult = await this.productsRepository.update(id, updateProductDto);
-    
+
         if (updateResult.affected === 0) {
             throw new NotFoundException(`Product with ID ${id} not found`);
         }
-    
+
         return await this.findProductsById(id);
     };
 

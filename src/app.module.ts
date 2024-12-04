@@ -28,7 +28,7 @@ import {
                     environment: process.env.ENVIRONMENT || 'TEST',
                 }),
             ],
-            envFilePath: ['.env', '.env.development'],
+            envFilePath: ['.env', '.env.development.local'],
         }),
 
         TypeOrmModule.forRootAsync({

@@ -13,11 +13,11 @@ import { OrderDetailsService } from '../order-details/order-details.service';
 
 
 @Module({
-  imports: [ 
+  imports: [
     TypeOrmModule.forFeature([Order, OrderDetail, User, Product]),
-    UsersModule,  
-],
+    UsersModule,
+  ],
   controllers: [OrdersController],
   providers: [OrdersService, OrderDetailsService, UsersService, ProductsService],
 })
-export class OrdersModule {}
+export class OrdersModule { }

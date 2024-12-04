@@ -1,21 +1,33 @@
 import { Type } from 'class-transformer';
 import { ArrayNotEmpty, IsArray, IsNotEmpty, IsUUID, ValidateNested } from 'class-validator';
-
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOrderDto {
-    @IsUUID('4', { message: 'El userId debe tener un formato UUID válido' })
-    @IsNotEmpty({ message: 'El userId no puede estar vacío' })
-    userId: string;
+  @ApiProperty({
+    description: 'ID of the user placing the order',
+    example: 'uuid-of-user',
+  })
+  @IsUUID('4', { message: 'The userId must be a valid UUID.' })
+  @IsNotEmpty({ message: 'The userId field cannot be empty.' })
+  userId: string;
 
-    @IsArray()
-    @ArrayNotEmpty({ message: 'Products debe contener al menos un elemento' })
-    @ValidateNested({ each: true }) 
-    @Type(() => PartialProducts) 
-    products: PartialProducts[];
-};
+  @ApiProperty({
+    description: 'List of products included in the order',
+    example: [{ id: 'uuid-of-product' }],
+  })
+  @IsArray({ message: 'The products field must be an array.' })
+  @ArrayNotEmpty({ message: 'The products field must contain at least one product.' })
+  @ValidateNested({ each: true })
+  @Type(() => PartialProducts)
+  products: PartialProducts[];
+}
 
 export class PartialProducts {
-    @IsUUID('4', { message: 'El id del producto debe tener un formato UUID válido' })
-    @IsNotEmpty({ message: 'El id del producto no puede estar vacío' })
-    id: string;
-};
+  @ApiProperty({
+    description: 'ID of the product',
+    example: 'uuid-of-product',
+  })
+  @IsUUID('4', { message: 'The product ID must be a valid UUID.' })
+  @IsNotEmpty({ message: 'The product ID field cannot be empty.' })
+  id: string;
+}

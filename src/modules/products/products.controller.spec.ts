@@ -53,7 +53,7 @@ describe('ProductsController', () => {
         },
       ],
     }).compile();
-  
+
     controller = module.get<ProductsController>(ProductsController);
     service = module.get<ProductsService>(ProductsService);
   });
@@ -90,11 +90,11 @@ describe('ProductsController', () => {
       const createProductDto: CreateProductDto = {
         name: 'New Product',
         description: 'New product description',
-        price: 100,       
-        stock: 10,        
+        price: 100,
+        stock: 10,
         imgUrl: 'http://example.com/product-image.jpg',
       };
-    
+
       const result = await controller.addProduct(createProductDto);
       expect(result).toEqual({ id: '3', name: 'New Product', description: 'New product description' });
     });
@@ -103,11 +103,11 @@ describe('ProductsController', () => {
       const createProductDto: CreateProductDto = {
         name: 'Existing Product',
         description: 'Existing Product description',
-        price: 100,      
-        stock: 10,       
+        price: 100,
+        stock: 10,
         imgUrl: 'http://example.com/product-image.jpg',
       };
-    
+
       await expect(controller.addProduct(createProductDto)).rejects.toThrowError(
         new HttpException('Product already exists', HttpStatus.CONFLICT),
       );
@@ -126,17 +126,17 @@ describe('ProductsController', () => {
 
     it('should throw an error if update fails', async () => {
       const updateProductDto: UpdateProductDto = {
-          name: 'Updated Product',
-          description: 'Updated product description',
+        name: 'Updated Product',
+        description: 'Updated product description',
       };
-  
+
       mockProductsService.updateProduct = async () => {
-          throw new Error('Simulated failure in service');
+        throw new Error('Simulated failure in service');
       };
-  
+
       await expect(controller.updateProduct('non-existent-id', updateProductDto))
-          .rejects
-          .toThrowError(new HttpException('Error updating product', HttpStatus.INTERNAL_SERVER_ERROR));
+        .rejects
+        .toThrowError(new HttpException('Error updating product', HttpStatus.INTERNAL_SERVER_ERROR));
     });
   });
 

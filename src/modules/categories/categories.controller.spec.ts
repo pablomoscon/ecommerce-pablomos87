@@ -7,17 +7,17 @@ describe('CategoriesController', () => {
   let controller: CategoriesController;
   let service: CategoriesService;
 
-  
+
   const mockCategoriesService = {
     findAllCategories: async () => {
-      
+
       return [
         { id: 1, name: 'Category 1' },
         { id: 2, name: 'Category 2' },
       ];
     },
     addCategories: async (createCategoryDtos: CreateCategoryDto[]) => {
-      
+
       if (createCategoryDtos.some((dto) => !dto.name)) {
         throw new Error('Invalid category');
       }
@@ -30,7 +30,7 @@ describe('CategoriesController', () => {
       providers: [
         {
           provide: CategoriesService,
-          useValue: mockCategoriesService, 
+          useValue: mockCategoriesService,
         },
       ],
     }).compile();
@@ -67,7 +67,7 @@ describe('CategoriesController', () => {
     it('should throw an error if a category is invalid', async () => {
       const invalidCategoriesDto: CreateCategoryDto[] = [
         { name: 'Valid Category' },
-        { name: '' }, 
+        { name: '' },
       ];
 
       await expect(controller.addCategories(invalidCategoriesDto)).rejects.toThrow(

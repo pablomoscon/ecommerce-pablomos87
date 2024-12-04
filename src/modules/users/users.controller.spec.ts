@@ -50,9 +50,9 @@ describe('UsersController', () => {
         {
           provide: JwtService,
           useValue: {
-              signAsync: () => Promise.resolve('mockJwtToken'),
+            signAsync: () => Promise.resolve('mockJwtToken'),
           },
-      },
+        },
       ],
     }).compile();
 
@@ -80,9 +80,9 @@ describe('UsersController', () => {
   });
 
 
-it('findUsersById() should throw an exception for a non-existing user', async () => {
-  await expect(controller.findUsersById('non-existing-id'))
-    .rejects
-    .toThrow(HttpException);
-});
+  it('findUsersById() should throw an exception for a non-existing user', async () => {
+    await expect(controller.findUsersById('non-existing-id'))
+      .rejects
+      .toThrow(HttpException);
+  });
 });

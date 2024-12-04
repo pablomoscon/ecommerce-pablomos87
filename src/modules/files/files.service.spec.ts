@@ -22,8 +22,8 @@ describe('FilesService', () => {
 
     mockProductsService = {
       updateProduct: async (id: string, updateProductDto: UpdateProductDto) => {
-        const updatedProduct = { 
-          ...updateProductDto, 
+        const updatedProduct = {
+          ...updateProductDto,
           id: id,
         } as Product;
         return updatedProduct;

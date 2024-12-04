@@ -2,7 +2,7 @@ import { config as dotenvConfig } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { registerAs } from '@nestjs/config';
 
-dotenvConfig({ path: '.env.development' });
+dotenvConfig({ path: '.env.development.local' });
 
 const SqliteTestDataSourceOption: DataSourceOptions = {
   type: 'sqlite',
