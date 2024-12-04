@@ -27,7 +27,6 @@ async function bootstrap() {
   }));
   app.use(loggerGloblal);
 
-  // Swagger y Seeds
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Demo Nest')
     .setDescription('Esta es una API construida con Nest para ser empleada en las demos del módulo 4 de la especialidad backend de la carrera Fullstack Developer')
@@ -38,7 +37,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
 
-  // Seeds
   const categoriesSeed = app.get(CategoriesSeed);
   await categoriesSeed.seed();
   console.log('The insertion of categories has been completed.');

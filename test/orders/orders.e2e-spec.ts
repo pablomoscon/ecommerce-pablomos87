@@ -15,7 +15,8 @@ describe('OrdersController (e2e)', () => {
   let usersService: UsersService;
   let authToken: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    process.env.ENVIRONMENT = 'TEST';
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -60,6 +61,10 @@ describe('OrdersController (e2e)', () => {
       });
 
     authToken = loginResponse.body['token'];
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   it('should create an order', async () => {
@@ -132,9 +137,5 @@ describe('OrdersController (e2e)', () => {
       .expect(404);
 
     expect(response.body).toHaveProperty('message', `Order with id ${orderId} not found`);
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
