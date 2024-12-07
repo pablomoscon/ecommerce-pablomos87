@@ -4,7 +4,7 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 export class ImageValidationPipe implements PipeTransform {
     transform(value: any, metadata: ArgumentMetadata) {
         const maxSize = 204800;
-        const mimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const mimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
         if (!value) {
             throw new BadRequestException('No file provided');
