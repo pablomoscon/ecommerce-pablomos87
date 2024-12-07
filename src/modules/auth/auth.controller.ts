@@ -58,7 +58,7 @@ export class AuthController {
         throw error;
       }
       throw new HttpException(
-        'Error logging in user',
+        'Error during login process',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

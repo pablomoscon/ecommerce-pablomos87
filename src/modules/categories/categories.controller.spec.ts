@@ -16,9 +16,9 @@ describe('CategoriesController', () => {
         { id: 2, name: 'Category 2' },
       ];
     },
-    addCategories: async (createCategoryDtos: CreateCategoryDto[]) => {
+    addCategories: async (createCategoryDto: CreateCategoryDto[]) => {
 
-      if (createCategoryDtos.some((dto) => !dto.name)) {
+      if (createCategoryDto.some((dto) => !dto.name)) {
         throw new Error('Invalid category');
       }
     },

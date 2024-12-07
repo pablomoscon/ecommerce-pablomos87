@@ -14,10 +14,10 @@ export class CategoriesService {
 
     async findAllCategories() {
         return this.categoriesRepository.find();
-    }
+    };
 
-    async addCategories(createCategoryDtos: CreateCategoryDto[]) {
-        for (const categoryDto of createCategoryDtos) {
+    async addCategories(createCategoryDto: CreateCategoryDto[]) {
+        for (const categoryDto of createCategoryDto) {
             const existingCategory = await this.categoriesRepository.findOneBy({ name: categoryDto.name });
 
             if (!existingCategory) {
@@ -25,5 +25,5 @@ export class CategoriesService {
                 await this.categoriesRepository.save(newCategory);
             }
         }
-    }
-}
+    };
+};

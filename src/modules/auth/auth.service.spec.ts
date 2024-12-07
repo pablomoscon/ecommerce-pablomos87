@@ -58,7 +58,6 @@ it('should be defined', () => {
 
 it('signUp() creates a new user with encrypted password', async () => {
   const user = await service.signUp(mockUser);
-  console.log(user);
   expect(user).toHaveProperty('id');
   expect(user).toHaveProperty('rol', Role.User);
   expect(user).toHaveProperty('password');

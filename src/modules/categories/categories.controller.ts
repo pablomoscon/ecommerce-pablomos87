@@ -13,13 +13,33 @@ export class CategoriesController {
 
   @Get()
   async getAlCategories() {
-    return await this.categoriesService.findAllCategories()
-  }
+    try {
+      return await this.categoriesService.findAllCategories()
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Failed to get categories',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  };
 
   @Post('add-categories')
   async addCategories(@Body() createCategoryDto: CreateCategoryDto[]) {
-    await this.categoriesService.addCategories(createCategoryDto);
-    return { message: 'Categories added successfully' };
-  }
-}
+    try {
+      await this.categoriesService.addCategories(createCategoryDto);
+      return { message: 'Categories added successfully' };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Failed to add categories',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  };
+};
 

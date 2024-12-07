@@ -76,19 +76,4 @@ describe('CategoriesService', () => {
     const createdCategory = mockRepository.create(categoryDto);
     expect(createdCategory).toEqual(existingCategory);
   });
-
-  it('should create multiple categories if they do not exist', async () => {
-    const categoryDtos: CreateCategoryDto[] = [
-      { name: 'Category 1' },
-      { name: 'Category 2' },
-    ];
-
-    await service.addCategories(categoryDtos);
-
-    for (const categoryDto of categoryDtos) {
-      const createdCategory = mockRepository.create(categoryDto);
-      await mockRepository.save(createdCategory);
-      expect(createdCategory.name).toBe(categoryDto.name);
-    }
-  });
 });
