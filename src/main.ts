@@ -18,7 +18,7 @@ async function bootstrap() {
 
   if (executedMigrations.length === 0) {
     await DataSourceInstance.runMigrations();
-  }
+  };
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
@@ -50,5 +50,6 @@ async function bootstrap() {
   console.log('The insertion of administrator users has been completed.');
 
   await app.listen(process.env.PORT ?? 3000);
-}
+};
+
 bootstrap();

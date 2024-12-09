@@ -1,13 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UploadApiOptions, v2 as cloudinary } from 'cloudinary';
 
-
 @Injectable()
 export class CloudinaryService {
   constructor(
     @Inject('CLOUDINARY') private cloudinaryInstance: typeof cloudinary
-  ) { }
-
+  ) { };
 
   async uploadFile(buffer: Buffer, originalname?: string): Promise<string> {
     const options: UploadApiOptions = {
@@ -25,7 +23,7 @@ export class CloudinaryService {
       stream.write(buffer);
       stream.end();
     });
-  }
+  };
 
   async getUrl(publicId: string): Promise<string> {
     const result = await cloudinary.api.resource(publicId);
