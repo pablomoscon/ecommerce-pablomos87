@@ -54,7 +54,7 @@ export class UsersController {
         } catch (error) {
             throw new HttpException(
                 'Error fetching user',
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     };
@@ -72,7 +72,7 @@ export class UsersController {
         } catch (error) {
             throw new HttpException(
                 'Error updating user',
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     };
@@ -86,7 +86,7 @@ export class UsersController {
         } catch (error) {
             throw new HttpException(
                 'Error deleting user',
-                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }

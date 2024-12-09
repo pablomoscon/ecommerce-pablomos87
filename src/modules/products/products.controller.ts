@@ -55,7 +55,7 @@ export class ProductsController {
   async addProduct(@Body() createProductDto: CreateProductDto) {
     try {
       return await this.productsService.addProduct(createProductDto);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === '23505') {
         throw new HttpException('Product already exists', HttpStatus.CONFLICT);
       }
@@ -98,7 +98,7 @@ export class ProductsController {
     } catch (error) {
       throw new HttpException(
         'Error deleting product',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   };

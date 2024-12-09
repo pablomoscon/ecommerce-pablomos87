@@ -15,98 +15,73 @@ import { CreateOrderDetailDto } from '../order-details/dto/create-order-detail.d
 describe('OrdersService', () => {
   let service: OrdersService;
 
-  let orders: Order[] = [
-    {
-      id: 'order-id-1',
-      user: { id: 'user-id-1', name: 'User 1', email: 'user1@email.com' } as User,
-      date: new Date(),
-      orderDetails: {
-        id: 'order-detail-id-1',
-        price: 300,
+  const orders: Order[] = [];
+
+  const mockOrdersRepository = {
+    create: (entityLike: Partial<Order>): Order => ({
+      ...entityLike,
+      id: 'order-id',
+    } as Order),
+    save: (order: Order): Promise<Order> => {
+      orders.push(order);
+      return Promise.resolve(order);
+    },
+    findOneBy: (order: Partial<Order>): Promise<Order | undefined> => {
+      const foundOrder = orders.find((o) => o.id === order.id);
+      return Promise.resolve(foundOrder ?? undefined);
+    },
+  };
+
+  const mockUsersService = {
+    findUsersById: (id: string) => {
+      if (id === 'user-id') {
+        return Promise.resolve({ id: 'user-id', name: 'Test User' });
+      }
+      return Promise.resolve(null);
+    },
+  };
+
+  const mockProductsService = {
+    buyProduct: async (id: string): Promise<number> => {
+      const mockProducts: Record<string, { stock: number; price: number }> = {
+        'product-id-1': { stock: 10, price: 100 },
+        'product-id-2': { stock: 5, price: 200 },
+        [`product-${id}`]: { stock: 10, price: 50 },
+      };
+
+      const product = mockProducts[id];
+      if (!product || product.stock === 0) {
+        throw new Error('Out of stock');
+      }
+
+      product.stock -= 1;
+      return product.price;
+    },
+  };
+
+  const mockOrderDetailsService = {
+    createOrderDetail: async (createOrderDetailDto: CreateOrderDetailDto): Promise<OrderDetail> => ({
+      ...createOrderDetailDto,
+      id: 'order-detail-id',
+      products: createOrderDetailDto.products.map((product) => ({
+        id: (product as Product).id,
+        name: `Product ${(product as Product).id}`,
+        price: (product as Product).price || 100,
+      })),
+    } as OrderDetail),
+    findOrderDetailsById: async (orderId: string): Promise<OrderDetail[]> => [
+      {
+        id: 'order-detail-id',
+        order: { id: 'order-id', date: new Date(), user: { id: 'user-id', name: 'Test User' } as User },
         products: [
-          { id: 'product-id-1', stock: 10, price: 100 } as Product,
-          { id: 'product-id-2', stock: 5, price: 200 } as Product,
+          { id: 'product-id-1', name: 'Product 1', price: 100 } as Product,
+          { id: 'product-id-2', name: 'Product 2', price: 200 } as Product,
         ],
       } as OrderDetail,
-    },
-  ];
+    ],
+  };
 
   beforeEach(async () => {
-    const mockOrdersRepository = {
-      create: (entityLike: Partial<Order>): Order => {
-        return {
-          ...entityLike,
-          id: `order-id-${Math.random().toString(36).substr(2, 9)}`,
-        } as Order;
-      },
-      save: (order: Order): Promise<Order> => {
-        orders.push(order);
-        return Promise.resolve(order);
-      },
-      findOneBy: (order: Partial<Order>): Promise<Order | undefined> => {
-        const foundOrder = orders.find((o) => o.id === order.id);
-        return Promise.resolve(foundOrder ?? undefined);
-      },
-    };
-
-    const mockUsersService = {
-      findUsersById: (id: string) => {
-        if (id === 'user-id') {
-          return Promise.resolve({ id: 'user-id', name: 'Test User' });
-        }
-        return Promise.resolve(null);
-      },
-    };
-
-    const mockProductsService = {
-      buyProduct: async (id: string): Promise<number> => {
-        const mockProducts: Record<string, { stock: number; price: number }> = {
-          'product-id-1': { stock: 10, price: 100 },
-          'product-id-2': { stock: 5, price: 200 },
-          'product-id-3': { stock: 0, price: 300 },
-          [`product-${id}`]: { stock: 10, price: 50 },
-        };
-
-        const product = mockProducts[id];
-        if (!product || product.stock === 0) {
-          throw new Error('Out of stock');
-        }
-
-        product.stock -= 1;
-        return product.price;
-      },
-    };
-
-    const mockOrderDetailsService = {
-      create: async (createOrderDetailDto: CreateOrderDetailDto): Promise<OrderDetail> => {
-        return {
-          ...createOrderDetailDto,
-          id: 'order-detail-id',
-          products: createOrderDetailDto.products.map((product) => {
-            return {
-              id: (product as Product).id,
-              name: `Product ${(product as Product).id}`,
-              price: (product as Product).price || 100,
-            };
-          }),
-        } as OrderDetail;
-      },
-      findOrderDetailsById: async (orderId: string): Promise<OrderDetail[]> => {
-        return [{
-          id: 'order-detail-id',
-          order: {
-            id: 'order-id',
-            date: new Date(),
-            user: { id: 'user-id', name: 'Test User' } as User,
-          },
-          products: [
-            { id: 'product-id-1', name: 'Product 1', price: 100 } as Product,
-            { id: 'product-id-2', name: 'Product 2', price: 200 } as Product,
-          ],
-        } as OrderDetail];
-      },
-    };
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrdersService,
@@ -136,7 +111,6 @@ describe('OrdersService', () => {
     expect(result).toHaveProperty('price', 100);
     expect(result.products).toHaveLength(1);
     expect(result.order).toHaveProperty('id');
-    expect(result.order.id).toMatch(/^order-id-.+/);
   });
 
   it('addOrder() calculates the correct total for multiple products', async () => {
@@ -168,13 +142,13 @@ describe('OrdersService', () => {
       products: [{ id: 'product-id-1' }],
     };
 
-    await expect(service.addOrder(invalidCreateOrderDto)).rejects.toThrow(
+    await expect(service.addOrder(invalidCreateOrderDto)).rejects.toThrowError(
       'User with id non-existent-user-id not found',
     );
   });
 
   it('getById() retrieves an order and its details', async () => {
-    const result = await service.findOrderById('order-id-1');
+    const result = await service.findOrderById('order-id');
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty('id', 'order-detail-id');

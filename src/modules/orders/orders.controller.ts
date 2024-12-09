@@ -33,7 +33,7 @@ export class OrdersController {
       console.log('Error adding order:', error)
       throw new HttpException(
         'Error adding order',
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       )
     };
   };
@@ -50,9 +50,9 @@ export class OrdersController {
         throw error;
       }
 
-      const message = error.response?.message || 'Error fetching order';
-      const status = error.status || HttpStatus.INTERNAL_SERVER_ERROR;
-      throw new HttpException(message, status);
+      const responseMessage = (error as any).response?.message || 'Error fetching order'; 
+      const statusCode = (error as any).status || HttpStatus.INTERNAL_SERVER_ERROR; 
+      throw new HttpException(responseMessage, statusCode);
     }
   }
 };
