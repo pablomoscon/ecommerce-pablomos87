@@ -38,7 +38,7 @@ export class ProductsSeed {
         product.stock
           = productData.stock;
         product.category
-          = [await this.findCategoryByName(productData.category)];
+          = await this.findCategoryByName(productData.category);
 
         await this.productsRepository.save(product);
       }

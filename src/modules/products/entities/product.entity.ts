@@ -57,7 +57,7 @@ export class Product {
     example: [{ id: 'uuid-of-category' }],
   })
   @ManyToOne(() => Category, (category) => category.product)
-  category: Category[];
+  category: Category;
 
   @ApiProperty({
     description: 'Order details associated with the product',

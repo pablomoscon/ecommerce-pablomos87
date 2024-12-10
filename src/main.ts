@@ -11,7 +11,7 @@ import { MigrationExecutor } from 'typeorm';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-/*   await DataSourceInstance.initialize();
+  await DataSourceInstance.initialize();
 
   const migrationExecutor = new MigrationExecutor(DataSourceInstance);
   const executedMigrations = await migrationExecutor.getExecutedMigrations();
@@ -19,7 +19,7 @@ async function bootstrap() {
   if (executedMigrations.length === 0) {
     await DataSourceInstance.runMigrations();
   };
- */
+
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
