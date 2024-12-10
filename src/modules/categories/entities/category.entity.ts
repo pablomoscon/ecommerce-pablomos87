@@ -1,5 +1,5 @@
 import { Product } from 'src/modules/products/entities/product.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
@@ -22,6 +22,6 @@ export class Category {
         description: 'The associated product for this category',
         type: () => Product,
     })
-    @ManyToOne(() => Product, (product) => product.category)
+    @OneToMany(() => Product, (product) => product.category)
     product: Product;
 }

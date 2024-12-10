@@ -62,7 +62,6 @@ describe('OrderDetailsController', () => {
 
       const error = new Error('Service error');
 
-
       const originalCreate = service.createOrderDetail;
       service.createOrderDetail = async () => {
         throw error;
@@ -71,7 +70,6 @@ describe('OrderDetailsController', () => {
       await expect(controller.create(createOrderDetailDto)).rejects.toThrow(
         'Service error',
       );
-
 
       service.createOrderDetail = originalCreate;
     });

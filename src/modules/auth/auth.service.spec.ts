@@ -77,7 +77,7 @@ it('signUp() throws an error if the email is already in use', async () => {
 
   try {
     await service.signUp(mockUser);
-  } catch (error) {
+  } catch (error:any) {
     expect(error.message).toEqual('User already exists');
   }
 });
@@ -87,7 +87,7 @@ it('signIn() throws an error if the email is not found', async () => {
 
   try {
     await service.signin(signInDto);
-  } catch (error) {
+  } catch (error:any) {
     expect(error).toBeInstanceOf(BadRequestException);
     expect(error.message).toEqual('Invalid credentials');
   }
@@ -114,7 +114,7 @@ it('signIn() returns an error if the password is invalid', async () => {
 
   try {
     await service.signin(signInDto);
-  } catch (error) {
+  } catch (error:any) {
     expect(error.message).toEqual('Invalid credentials');
   }
 });

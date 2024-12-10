@@ -148,8 +148,8 @@ describe('ProductsService', () => {
     const productId = 'abcd1235';
     try {
       await service.buyProduct(productId);
-    } catch (e) {
-      expect(e.message).toBe('Out of stock');
+    } catch (error: any) {
+      expect(error.message).toBe('Out of stock');
     }
   });
 

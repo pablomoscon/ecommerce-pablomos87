@@ -4,7 +4,6 @@ import { User } from './entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { BadRequestException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 
@@ -149,5 +148,4 @@ describe('UsersService', () => {
     expect(result).toEqual({ deleted: false, id: nonExistingId });
     expect(users.length).toBe(initialUsersLength);
   });
-
 });

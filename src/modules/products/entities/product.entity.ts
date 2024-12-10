@@ -1,5 +1,5 @@
 import { Category } from './../../categories/entities/category.entity';
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, JoinTable } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn, JoinTable, ManyToOne } from 'typeorm';
 import { OrderDetail } from "src/modules/order-details/entities/order-detail.entity";
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -56,7 +56,7 @@ export class Product {
     isArray: true,
     example: [{ id: 'uuid-of-category' }],
   })
-  @OneToMany(() => Category, (category) => category.product)
+  @ManyToOne(() => Category, (category) => category.product)
   category: Category[];
 
   @ApiProperty({

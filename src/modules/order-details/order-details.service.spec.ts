@@ -27,7 +27,7 @@ describe('OrderDetailsService', () => {
   beforeEach(async () => {
     const mockOrderDetailsRepository = {
       create: (dto: CreateOrderDetailDto) => {
-        return { ...dto, id: `order-detail-id-${Math.random().toString(36).substr(2, 9)}` };
+        return { ...dto, id: 'order-detail-id-1' };
       },
       save: (orderDetail: OrderDetail) => {
         mockOrderDetails.push(orderDetail);
