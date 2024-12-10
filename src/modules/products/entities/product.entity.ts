@@ -51,9 +51,8 @@ export class Product {
   imgUrl: string;
 
   @ApiProperty({
-    description: 'Categories associated with the product',
+    description: 'Category associated with the product',
     type: () => Category,
-    isArray: true,
     example: [{ id: 'uuid-of-category' }],
   })
   @ManyToOne(() => Category, (category) => category.product)

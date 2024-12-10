@@ -19,8 +19,9 @@ export class Category {
     name: string;
 
     @ApiProperty({
-        description: 'The associated product for this category',
+        description: 'The associated products for this category',
         type: () => Product,
+        isArray: true,
     })
     @OneToMany(() => Product, (product) => product.category)
     product: Product[];
