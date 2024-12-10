@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -13,7 +13,13 @@ export class OrderDetailsController {
     try {
       return await this.orderDetailsService.createOrderDetail(createOrderDetailDto);
     } catch (error) {
-      throw error;
+        if (error instanceof HttpException) {
+          throw error;
+        }
+        throw new HttpException(
+          'Failed to create an order detail',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
-  }
-};
+  };
