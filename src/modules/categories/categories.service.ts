@@ -24,6 +24,8 @@ export class CategoriesService {
                 const newCategory = this.categoriesRepository.create(categoryDto);
                 await this.categoriesRepository.save(newCategory);
             }
+            return 'Categories processed successfully';
         }
+        
     };
 };
